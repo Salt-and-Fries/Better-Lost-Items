@@ -1,0 +1,13 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 5,
+      "minecraft:time_since_rest": 8008,
+      "minecraft:total_world_time": 8019,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 8008,
+      "minecraft:time_since_death": 8008
+    }
+  },
+  "DataVersion": 4788
+}

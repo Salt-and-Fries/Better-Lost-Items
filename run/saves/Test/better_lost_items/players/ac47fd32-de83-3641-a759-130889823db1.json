@@ -1,0 +1,363 @@
+{
+  "lost_items": [
+    {
+      "id": [
+        902017148,
+        -8630299,
+        -1314183149,
+        476823499
+      ],
+      "item": {
+        "id": "minecraft:lava_bucket",
+        "count": 1
+      }
+    },
+    {
+      "id": [
+        -1173254702,
+        1279411294,
+        -1633344557,
+        1504870689
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        921211686,
+        -1227011512,
+        -2142499697,
+        1281263841
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        693232023,
+        -1274920766,
+        -1431700860,
+        -1110703183
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        -311259641,
+        414076868,
+        -1733467868,
+        -675086573
+      ],
+      "item": {
+        "id": "minecraft:splash_potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:fire_resistance"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        -148733854,
+        -1224588116,
+        -1642800231,
+        1476679687
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        725250549,
+        -1684123744,
+        -1218600318,
+        -463601790
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1476753756,
+        -7188843,
+        -1814210870,
+        1504350097
+      ],
+      "item": {
+        "id": "minecraft:potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:fire_resistance"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        -823094054,
+        550849259,
+        -1174079858,
+        -1608587014
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1512779590,
+        -149470628,
+        -1394522585,
+        1478253868
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        -1746269238,
+        -1977989705,
+        -1257116161,
+        -42016400
+      ],
+      "item": {
+        "id": "minecraft:lingering_potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:fire_resistance"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        387979136,
+        -853324482,
+        -1230908777,
+        -1906212792
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 30
+      }
+    },
+    {
+      "id": [
+        1405400884,
+        1067533821,
+        -2076336971,
+        67526786
+      ],
+      "item": {
+        "id": "minecraft:cooked_beef",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1376138278,
+        163401100,
+        -1260301472,
+        -845317462
+      ],
+      "item": {
+        "id": "minecraft:ender_pearl",
+        "count": 16
+      }
+    },
+    {
+      "id": [
+        113864061,
+        -1375910389,
+        -1278561319,
+        1958943664
+      ],
+      "item": {
+        "id": "minecraft:lingering_potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:long_fire_resistance"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        728113313,
+        -547008544,
+        -1274819480,
+        -1463642398
+      ],
+      "item": {
+        "id": "minecraft:potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:long_leaping"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        -343118689,
+        1103774013,
+        -1161100010,
+        -286170268
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        624047613,
+        -1089058986,
+        -1285626595,
+        1570347296
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1480961181,
+        -2059581602,
+        -1969769653,
+        -701580487
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        593245779,
+        -635157113,
+        -1143905902,
+        -150357360
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        -1295227052,
+        669208131,
+        -1206156628,
+        -2117889574
+      ],
+      "item": {
+        "id": "minecraft:splash_potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:long_fire_resistance"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        432064301,
+        1717125668,
+        -1515554834,
+        967636350
+      ],
+      "item": {
+        "id": "minecraft:potion",
+        "count": 1,
+        "components": {
+          "minecraft:potion_contents": {
+            "potion": "minecraft:long_fire_resistance"
+          }
+        }
+      }
+    },
+    {
+      "id": [
+        1929463162,
+        -225947769,
+        -1193368592,
+        1056890542
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        -1068893327,
+        -743159716,
+        -1169563612,
+        123018167
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        -1816864827,
+        -1728362998,
+        -1273419791,
+        1867423343
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        177111198,
+        1212171506,
+        -1165412179,
+        825731332
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        -909519436,
+        -2124201045,
+        -1116558093,
+        1236312686
+      ],
+      "item": {
+        "id": "minecraft:cooked_beef",
+        "count": 56
+      }
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 13,
+      "minecraft:time_since_rest": 9738,
+      "minecraft:walk_one_cm": 3648,
+      "minecraft:total_world_time": 23628,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 15154,
+      "minecraft:sneak_time": 21,
+      "minecraft:play_time": 20050,
+      "minecraft:deaths": 2,
+      "minecraft:jump": 12,
+      "minecraft:time_since_death": 9703
+    },
+    "minecraft:used": {
+      "minecraft:wandering_trader_spawn_egg": 1
+    }
+  },
+  "DataVersion": 4788
+}

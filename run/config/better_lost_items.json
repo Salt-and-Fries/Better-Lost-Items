@@ -1,0 +1,18 @@
+{
+  "death_loot_payment_item": "minecraft:emerald",
+  "death_loot_payment_amount": 10,
+  "fetch_enabled": true,
+  "use_food_for_fetch_journey": true,
+  "journey_food_amount": 8,
+  "journey_custom_item": "minecraft:cooked_beef",
+  "journey_custom_potion": "minecraft:water",
+  "journey_custom_amount": 8,
+  "burned_items_retrievable": true,
+  "burned_fetch_item": "minecraft:potion",
+  "burned_fetch_potion": "minecraft:fire_resistance",
+  "burned_fetch_amount": 1,
+  "void_lost_items_retrievable": true,
+  "void_fetch_item": "minecraft:ender_pearl",
+  "void_fetch_potion": "minecraft:water",
+  "void_fetch_amount": 2
+}

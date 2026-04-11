@@ -1,0 +1,79 @@
+{
+  "burned_items": [
+    {
+      "id": [
+        2006096933,
+        -888387173,
+        -1442863116,
+        -2004762823
+      ],
+      "item": {
+        "id": "minecraft:dirt",
+        "count": 64,
+        "components": {
+          "minecraft:container": []
+        }
+      }
+    },
+    {
+      "id": [
+        -1011380952,
+        1511866566,
+        -1406657197,
+        -747263110
+      ],
+      "item": {
+        "id": "minecraft:shulker_box",
+        "count": 1
+      }
+    },
+    {
+      "id": [
+        1085289835,
+        -1347991116,
+        -1656481845,
+        242787181
+      ],
+      "item": {
+        "id": "minecraft:shulker_box",
+        "count": 1
+      }
+    },
+    {
+      "id": [
+        -335549319,
+        -17480355,
+        -1847158599,
+        374691161
+      ],
+      "item": {
+        "id": "minecraft:cooked_beef",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1876922718,
+        2082685273,
+        -1141731242,
+        441905605
+      ],
+      "item": {
+        "id": "minecraft:cooked_beef",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1974819720,
+        -335001018,
+        -1171480236,
+        1604516917
+      ],
+      "item": {
+        "id": "minecraft:wandering_trader_spawn_egg",
+        "count": 1
+      }
+    }
+  ]
+}

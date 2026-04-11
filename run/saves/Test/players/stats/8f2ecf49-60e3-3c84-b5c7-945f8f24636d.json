@@ -1,0 +1,32 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 14,
+      "minecraft:time_since_rest": 5554,
+      "minecraft:walk_one_cm": 3054,
+      "minecraft:leave_game": 1,
+      "minecraft:mob_kills": 1,
+      "minecraft:play_time": 9922,
+      "minecraft:damage_dealt": 60,
+      "minecraft:jump": 13,
+      "minecraft:time_since_death": 5525,
+      "minecraft:sprint_one_cm": 4376,
+      "minecraft:total_world_time": 10001,
+      "minecraft:fly_one_cm": 81891,
+      "minecraft:crouch_one_cm": 39,
+      "minecraft:sneak_time": 15,
+      "minecraft:deaths": 2
+    },
+    "minecraft:picked_up": {
+      "minecraft:lead": 1,
+      "minecraft:leather": 2
+    },
+    "minecraft:used": {
+      "minecraft:netherite_sword": 1
+    },
+    "minecraft:killed": {
+      "minecraft:pillager": 1
+    }
+  },
+  "DataVersion": 4788
+}

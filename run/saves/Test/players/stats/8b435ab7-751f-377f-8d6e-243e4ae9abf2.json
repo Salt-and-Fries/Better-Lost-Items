@@ -1,0 +1,21 @@
+{
+  "stats": {
+    "minecraft:killed": {
+      "minecraft:wandering_trader": 1
+    },
+    "minecraft:used": {
+      "minecraft:wandering_trader_spawn_egg": 1
+    },
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 3,
+      "minecraft:time_since_rest": 4266,
+      "minecraft:total_world_time": 4277,
+      "minecraft:leave_game": 1,
+      "minecraft:mob_kills": 1,
+      "minecraft:play_time": 4266,
+      "minecraft:damage_dealt": 20,
+      "minecraft:time_since_death": 4266
+    }
+  },
+  "DataVersion": 4788
+}

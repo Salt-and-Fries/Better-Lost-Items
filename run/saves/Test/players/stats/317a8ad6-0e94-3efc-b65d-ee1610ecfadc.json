@@ -1,0 +1,34 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:traded_with_villager": 9,
+      "minecraft:talked_to_villager": 28,
+      "minecraft:time_since_rest": 11915,
+      "minecraft:walk_one_cm": 280,
+      "minecraft:total_world_time": 13955,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 31081,
+      "minecraft:sneak_time": 1,
+      "minecraft:play_time": 13946,
+      "minecraft:deaths": 1,
+      "minecraft:jump": 3,
+      "minecraft:time_since_death": 11890
+    },
+    "minecraft:used": {
+      "minecraft:wandering_trader_spawn_egg": 3,
+      "minecraft:brown_egg": 6
+    },
+    "minecraft:crafted": {
+      "minecraft:armadillo_scute": 64,
+      "minecraft:brown_egg": 16,
+      "minecraft:copper_boots": 1,
+      "minecraft:copper_helmet": 1,
+      "minecraft:copper_pickaxe": 1,
+      "minecraft:porkchop": 1,
+      "minecraft:copper_hoe": 1,
+      "minecraft:brown_wool": 2,
+      "minecraft:glow_ink_sac": 17
+    }
+  },
+  "DataVersion": 4788
+}

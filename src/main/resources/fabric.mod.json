@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "id": "better_lost_items",
+  "version": "${version}",
+  "name": "Better Lost Items",
+  "description": "Tracks despawned and death-lost items, then lets players recover them through wandering traders.",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/better_lost_items/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "org.betterLostItems.better_lost_items.client.Better_lost_itemsDataGenerator"
+    ],
+    "client": [
+      "org.betterLostItems.better_lost_items.client.Better_lost_itemsClient"
+    ],
+    "main": [
+      "org.betterLostItems.better_lost_items.Better_lost_items"
+    ],
+    "modmenu": [
+      "org.betterLostItems.better_lost_items.client.BetterLostItemsModMenuApi"
+    ]
+  },
+  "mixins": [
+    "better_lost_items.mixins.json",
+    {
+      "config": "better_lost_items.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "update_checker": false
+    }
+  }
+}

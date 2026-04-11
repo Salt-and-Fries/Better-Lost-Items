@@ -1,0 +1,17 @@
+{
+  "lost_items": [
+    {
+      "id": [
+        1596746682,
+        1949123890,
+        -1189688504,
+        272944422
+      ],
+      "item": {
+        "id": "minecraft:emerald",
+        "count": 64
+      }
+    }
+  ],
+  "purchased_items": []
+}

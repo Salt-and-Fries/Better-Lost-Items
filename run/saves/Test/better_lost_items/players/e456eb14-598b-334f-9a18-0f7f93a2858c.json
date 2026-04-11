@@ -1,0 +1,17 @@
+{
+  "lost_items": [
+    {
+      "id": [
+        1722842258,
+        1039156041,
+        -2127918156,
+        -658490121
+      ],
+      "item": {
+        "id": "minecraft:mace",
+        "count": 1
+      }
+    }
+  ],
+  "purchased_items": []
+}

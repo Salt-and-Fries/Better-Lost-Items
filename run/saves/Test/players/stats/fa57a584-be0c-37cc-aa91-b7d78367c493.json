@@ -1,0 +1,25 @@
+{
+  "stats": {
+    "minecraft:used": {
+      "minecraft:pink_shulker_box": 1
+    },
+    "minecraft:picked_up": {
+      "minecraft:pink_shulker_box": 1
+    },
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 3,
+      "minecraft:time_since_rest": 8343,
+      "minecraft:walk_one_cm": 2959,
+      "minecraft:total_world_time": 32390,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 16233,
+      "minecraft:sneak_time": 26,
+      "minecraft:play_time": 30874,
+      "minecraft:deaths": 1,
+      "minecraft:open_shulker_box": 1,
+      "minecraft:jump": 5,
+      "minecraft:time_since_death": 8319
+    }
+  },
+  "DataVersion": 4788
+}

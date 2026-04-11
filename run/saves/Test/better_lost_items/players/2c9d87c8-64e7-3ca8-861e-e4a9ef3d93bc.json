@@ -1,0 +1,29 @@
+{
+  "lost_items": [
+    {
+      "id": [
+        -1709693770,
+        -251441997,
+        -2074142660,
+        -1310944476
+      ],
+      "item": {
+        "id": "minecraft:stripped_jungle_log",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        1638320328,
+        -1578678507,
+        -1887481688,
+        -1810794864
+      ],
+      "item": {
+        "id": "minecraft:stripped_jungle_wood",
+        "count": 1
+      }
+    }
+  ],
+  "purchased_items": []
+}

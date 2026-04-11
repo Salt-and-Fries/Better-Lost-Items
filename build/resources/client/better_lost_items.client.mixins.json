@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.betterLostItems.better_lost_items.mixin.client",
+  "compatibilityLevel": "JAVA_25",
+  "client": [
+    "AbstractContainerScreenAccessor",
+    "MerchantScreenMixin",
+    "ScreenInvoker"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

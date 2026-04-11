@@ -1,0 +1,23 @@
+{
+  "stats": {
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 12,
+      "minecraft:time_since_rest": 50964,
+      "minecraft:walk_one_cm": 972,
+      "minecraft:total_world_time": 51135,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 3977,
+      "minecraft:sneak_time": 7,
+      "minecraft:play_time": 50964,
+      "minecraft:jump": 7,
+      "minecraft:time_since_death": 50964
+    },
+    "minecraft:used": {
+      "minecraft:grass_block": 1,
+      "minecraft:villager_spawn_egg": 1,
+      "minecraft:grindstone": 1,
+      "minecraft:wandering_trader_spawn_egg": 2
+    }
+  },
+  "DataVersion": 4788
+}

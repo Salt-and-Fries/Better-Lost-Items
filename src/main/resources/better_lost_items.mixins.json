@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "org.betterLostItems.better_lost_items.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "AbstractContainerMenuAccessor",
+    "AbstractVillagerAccessor",
+    "AbstractVillagerMixin",
+    "ItemEntityMixin",
+    "LivingEntityMixin",
+    "MerchantMenuAccessor",
+    "MerchantMenuMixin",
+    "MerchantOfferMixin",
+    "MobMixin",
+    "PlayerMixin",
+    "ServerLevelMixin",
+    "WanderingTraderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

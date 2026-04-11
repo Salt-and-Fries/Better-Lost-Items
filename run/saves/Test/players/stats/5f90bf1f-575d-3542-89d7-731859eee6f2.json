@@ -1,0 +1,29 @@
+{
+  "stats": {
+    "minecraft:picked_up": {
+      "minecraft:chainmail_boots": 1,
+      "minecraft:chainmail_leggings": 1
+    },
+    "minecraft:dropped": {
+      "minecraft:chainmail_boots": 1
+    },
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 12,
+      "minecraft:time_since_rest": 8155,
+      "minecraft:walk_one_cm": 999,
+      "minecraft:total_world_time": 18870,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 4921,
+      "minecraft:sneak_time": 207,
+      "minecraft:play_time": 17814,
+      "minecraft:deaths": 2,
+      "minecraft:jump": 3,
+      "minecraft:time_since_death": 8128,
+      "minecraft:drop": 1
+    },
+    "minecraft:used": {
+      "minecraft:wandering_trader_spawn_egg": 2
+    }
+  },
+  "DataVersion": 4788
+}

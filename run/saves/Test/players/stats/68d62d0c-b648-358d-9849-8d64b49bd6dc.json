@@ -1,0 +1,22 @@
+{
+  "stats": {
+    "minecraft:picked_up": {
+      "minecraft:diamond": 576,
+      "minecraft:emerald": 128
+    },
+    "minecraft:custom": {
+      "minecraft:sprint_one_cm": 2737,
+      "minecraft:talked_to_villager": 2,
+      "minecraft:time_since_rest": 10573,
+      "minecraft:walk_one_cm": 351,
+      "minecraft:total_world_time": 11533,
+      "minecraft:leave_game": 1,
+      "minecraft:fly_one_cm": 14683,
+      "minecraft:play_time": 11506,
+      "minecraft:deaths": 2,
+      "minecraft:jump": 4,
+      "minecraft:time_since_death": 10551
+    }
+  },
+  "DataVersion": 4788
+}

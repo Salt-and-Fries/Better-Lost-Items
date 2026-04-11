@@ -1,0 +1,33 @@
+{
+  "stats": {
+    "minecraft:picked_up": {
+      "minecraft:shulker_box": 1
+    },
+    "minecraft:custom": {
+      "minecraft:talked_to_villager": 12,
+      "minecraft:time_since_rest": 24452,
+      "minecraft:walk_one_cm": 21266,
+      "minecraft:leave_game": 1,
+      "minecraft:play_time": 28062,
+      "minecraft:open_shulker_box": 3,
+      "minecraft:jump": 56,
+      "minecraft:time_since_death": 24430,
+      "minecraft:sprint_one_cm": 6288,
+      "minecraft:total_world_time": 28096,
+      "minecraft:fly_one_cm": 64545,
+      "minecraft:interact_with_anvil": 1,
+      "minecraft:crouch_one_cm": 32,
+      "minecraft:sneak_time": 20,
+      "minecraft:deaths": 2
+    },
+    "minecraft:used": {
+      "minecraft:grass_block": 3,
+      "minecraft:lava_bucket": 13,
+      "minecraft:anvil": 1,
+      "minecraft:short_grass": 6,
+      "minecraft:shulker_box": 3,
+      "minecraft:tall_grass": 1
+    }
+  },
+  "DataVersion": 4788
+}

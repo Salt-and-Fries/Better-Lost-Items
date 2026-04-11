@@ -1,0 +1,29 @@
+{
+  "lost_items": [
+    {
+      "id": [
+        -586271818,
+        -560903262,
+        -2004101117,
+        -1711888705
+      ],
+      "item": {
+        "id": "minecraft:stripped_jungle_wood",
+        "count": 64
+      }
+    },
+    {
+      "id": [
+        403390463,
+        822168127,
+        -1398633096,
+        7741219
+      ],
+      "item": {
+        "id": "minecraft:spruce_fence_gate",
+        "count": 64
+      }
+    }
+  ],
+  "purchased_items": []
+}
