@@ -1,1 +1,53 @@
-.idea/vcs.xml
+# Gradle build output
+.gradle/
+build/
+out/
+
+# Loom / Minecraft run directories
+run/
+runs/
+
+# Compiled Java artifacts
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+# Keep the Gradle wrapper jar tracked even though jars are ignored above.
+!gradle/wrapper/gradle-wrapper.jar
+
+# Logs and crash reports
+*.log
+logs/
+crash-reports/
+hs_err_pid*
+replay_pid*
+
+# IntelliJ IDEA project files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse / VS Code / common editor state
+.classpath
+.project
+.settings/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local environment and secrets
+.env
+.env.*
+local.properties
+
+# Generated archives for sharing are rebuilt from source.
+remappedJars/
