@@ -167,7 +167,7 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
     /**
      * Pushes the owner while a destroyed container item emits its contents.
      */
-    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V"))
+    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/damagesource/DamageSource;)V"))
     private void betterLostItems$pushDestroyedContainerOwner(ServerLevel serverLevel, DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.betterLostItems$ownerId != null) {
             DeathDropTrackingContext.push(this.betterLostItems$ownerId);
@@ -177,7 +177,7 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
     /**
      * Pops the temporary owner after destroyed-container contents have spawned.
      */
-    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V", shift = At.Shift.AFTER))
+    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;Lnet/minecraft/world/damagesource/DamageSource;)V", shift = At.Shift.AFTER))
     private void betterLostItems$popDestroyedContainerOwner(ServerLevel serverLevel, DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.betterLostItems$ownerId != null) {
             DeathDropTrackingContext.pop();

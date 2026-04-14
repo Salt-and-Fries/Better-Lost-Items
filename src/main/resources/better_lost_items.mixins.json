@@ -17,6 +17,11 @@
     "ServerLevelMixin",
     "WanderingTraderMixin"
   ],
+  "client": [
+    "client.AbstractContainerScreenAccessor",
+    "client.MerchantScreenMixin",
+    "client.ScreenInvoker"
+  ],
   "injectors": {
     "defaultRequire": 1
   },

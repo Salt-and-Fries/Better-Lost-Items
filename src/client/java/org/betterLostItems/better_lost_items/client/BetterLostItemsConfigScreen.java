@@ -76,7 +76,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
     /**
      * Creates a config editor returning to the supplied parent screen.
      *
-     * @param parent previous Mod Menu screen
+     * @param parent previous screen
      */
     public BetterLostItemsConfigScreen(Screen parent) {
         super(Component.literal("Better Lost Items Config"));
@@ -235,7 +235,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
     }
 
     /**
-     * Returns to the Mod Menu screen without applying unsaved edits.
+     * Returns to the previous screen without applying unsaved edits.
      */
     @Override
     public void onClose() {

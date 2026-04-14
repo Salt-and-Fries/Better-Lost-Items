@@ -17,7 +17,7 @@ import java.util.UUID;
  * @param entryId retrieved-loot entry to collect
  */
 public record CollectRecoveryItemPayload(int traderEntityId, UUID entryId) implements CustomPacketPayload {
-    public static final Type<CollectRecoveryItemPayload> TYPE = CustomPacketPayload.createType("collect_recovery_item");
+    public static final Type<CollectRecoveryItemPayload> TYPE = new CustomPacketPayload.Type<>(Better_lost_items.id("collect_recovery_item"));
     public static final StreamCodec<RegistryFriendlyByteBuf, CollectRecoveryItemPayload> STREAM_CODEC = StreamCodec.composite(
             net.minecraft.network.codec.ByteBufCodecs.VAR_INT,
             CollectRecoveryItemPayload::traderEntityId,
@@ -27,7 +27,7 @@ public record CollectRecoveryItemPayload(int traderEntityId, UUID entryId) imple
     );
 
     /**
-     * @return Fabric custom payload type for this packet
+     * @return NeoForge custom payload type for this packet
      */
     @Override
     public Type<CollectRecoveryItemPayload> type() {

@@ -29,7 +29,7 @@ public final class DeathLootCacheCommand {
     /**
      * Registers {@code /deathlootcache <players> <clear|add|list>}.
      *
-     * @param dispatcher Brigadier command dispatcher supplied by Fabric
+     * @param dispatcher Brigadier command dispatcher supplied by NeoForge
      */
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("deathlootcache")

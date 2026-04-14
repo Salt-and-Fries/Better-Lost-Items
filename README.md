@@ -36,7 +36,7 @@ That means random world drops can reappear in trader markets, while items you pe
 - Makes fetching immersive: the trader walks away, despawns, and returns the next morning with the loot.
 - Spawns a nearby wandering trader after a player respawns if none are close enough.
 - Includes admin commands for testing or managing player death-loot caches.
-- Includes Mod Menu integration with an in-game config screen.
+- Includes an in-game NeoForge config screen.
 - Saves config changes live without needing a game restart.
 
 ## Wandering Trader Market
@@ -86,7 +86,7 @@ Better Lost Items creates a config file:
 config/better_lost_items.json
 ```
 
-If Mod Menu is installed, you can open the config screen in-game and edit everything live.
+You can open the config screen from NeoForge's Mods list and edit everything live.
 
 Configurable options include:
 
@@ -100,7 +100,7 @@ Configurable options include:
 - Whether void loot can be recovered.
 - The void-loot fetch item, potion type, and amount.
 
-Changes made through the Mod Menu config screen are saved immediately and take effect without restarting the game.
+Changes made through the config screen are saved immediately and take effect without restarting the game.
 
 ## Commands
 
@@ -122,15 +122,20 @@ These are especially useful for testing the recovery UI.
 
 ## Installation
 
-1. Install Fabric Loader for the supported Minecraft version.
-2. Install Fabric API.
-3. Put the Better Lost Items jar into your `mods` folder.
-4. Optional but recommended: install Mod Menu to edit the config in-game.
+1. Install NeoForge for the supported Minecraft version.
+2. Put the Better Lost Items jar into your `mods` folder.
+3. Open the NeoForge config screen from the Mods list to edit settings in-game.
 
 The built jar is created with:
 
 ```powershell
 ./gradlew build
+```
+
+To launch the NeoForge dev client from Gradle, use:
+
+```powershell
+./gradlew runClient
 ```
 
 Then use the jar from:
@@ -154,4 +159,3 @@ Because losing items forever is painful.
 Because wandering traders needed a better job.
 
 Because the idea of some weird llama merchant finding your lava-burned shulker box remains and selling them back to you is exactly the kind of Minecraft nonsense we deserve.
-

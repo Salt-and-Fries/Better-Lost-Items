@@ -21,7 +21,7 @@ import java.util.List;
 public record RecoveryScreenPayload(int traderEntityId, int marketCount, List<LostItemEntry> lostItems, List<LostItemEntry> purchasedItems) implements CustomPacketPayload {
     private static final StreamCodec<RegistryFriendlyByteBuf, List<LostItemEntry>> LOST_ITEM_LIST_CODEC = LostItemEntry.STREAM_CODEC.apply(ByteBufCodecs.list());
 
-    public static final Type<RecoveryScreenPayload> TYPE = CustomPacketPayload.createType("recovery_screen");
+    public static final Type<RecoveryScreenPayload> TYPE = new CustomPacketPayload.Type<>(Better_lost_items.id("recovery_screen"));
     public static final StreamCodec<RegistryFriendlyByteBuf, RecoveryScreenPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             RecoveryScreenPayload::traderEntityId,
@@ -35,7 +35,7 @@ public record RecoveryScreenPayload(int traderEntityId, int marketCount, List<Lo
     );
 
     /**
-     * @return Fabric custom payload type for this packet
+     * @return NeoForge custom payload type for this packet
      */
     @Override
     public Type<RecoveryScreenPayload> type() {

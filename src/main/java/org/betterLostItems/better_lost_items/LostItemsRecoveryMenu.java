@@ -95,7 +95,7 @@ public class LostItemsRecoveryMenu extends AbstractContainerMenu {
      * Server-side constructor used when opening the recovery tab from a wandering trader.
      */
     public LostItemsRecoveryMenu(int containerId, Inventory playerInventory, ServerPlayer serverPlayer, int traderEntityId, int marketCount) {
-        super(Better_lost_items.LOST_ITEMS_RECOVERY_MENU, containerId);
+        super(Better_lost_items.LOST_ITEMS_RECOVERY_MENU.get(), containerId);
         this.playerInventory = playerInventory;
         this.serverPlayer = serverPlayer;
 

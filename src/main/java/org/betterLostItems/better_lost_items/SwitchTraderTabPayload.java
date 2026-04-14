@@ -12,7 +12,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * @param recoveryTab {@code true} when switching to recovery; reserved for future tab states
  */
 public record SwitchTraderTabPayload(int containerId, boolean recoveryTab) implements CustomPacketPayload {
-    public static final Type<SwitchTraderTabPayload> TYPE = CustomPacketPayload.createType("switch_trader_tab");
+    public static final Type<SwitchTraderTabPayload> TYPE = new CustomPacketPayload.Type<>(Better_lost_items.id("switch_trader_tab"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SwitchTraderTabPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.CONTAINER_ID,
             SwitchTraderTabPayload::containerId,
@@ -22,7 +22,7 @@ public record SwitchTraderTabPayload(int containerId, boolean recoveryTab) imple
     );
 
     /**
-     * @return Fabric custom payload type for this packet
+     * @return NeoForge custom payload type for this packet
      */
     @Override
     public Type<SwitchTraderTabPayload> type() {
