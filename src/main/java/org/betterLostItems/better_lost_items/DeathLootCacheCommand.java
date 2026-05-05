@@ -8,7 +8,6 @@ import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public final class DeathLootCacheCommand {
      */
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("deathlootcache")
-                .requires(source -> source.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER))
+                .requires(source -> source.hasPermission(2))
                 .then(Commands.argument("player", EntityArgument.players())
                         .then(Commands.literal("clear")
                                 .executes(context -> clearPlayers(context, EntityArgument.getPlayers(context, "player"))))
@@ -75,7 +74,7 @@ public final class DeathLootCacheCommand {
             int finalTrackedChunkCount = trackedChunkCount;
             int finalClearedCount = clearedCount;
             context.getSource().sendSuccess(() -> Component.literal(
-                    "Cleared " + finalClearedCount + " cached stacks for " + player.getGameProfile().name()
+                    "Cleared " + finalClearedCount + " cached stacks for " + player.getGameProfile().getName()
                             + " (" + finalLostCount + " lost, " + finalRetrievedCount + " retrieved, " + finalBurnedCount + " burned, " + finalFallenCount + " fallen, " + finalPendingFetchCount + " pending fetch, " + finalTrackedChunkCount + " tracked chunks)."
             ), true);
         }
@@ -111,7 +110,7 @@ public final class DeathLootCacheCommand {
 
             int finalAddedCount = addedCount;
             context.getSource().sendSuccess(() -> Component.literal(
-                    "Moved " + finalAddedCount + " inventory stacks into " + player.getGameProfile().name() + "'s death loot cache."
+                    "Moved " + finalAddedCount + " inventory stacks into " + player.getGameProfile().getName() + "'s death loot cache."
             ), true);
         }
 
@@ -140,7 +139,7 @@ public final class DeathLootCacheCommand {
             int finalPendingFetchCount = pendingFetchItems.size();
             int finalTrackedChunkCount = trackedChunks.size();
             context.getSource().sendSuccess(() -> Component.literal(
-                    player.getGameProfile().name() + ": " + finalLostCount + " lost stacks, " + finalRetrievedCount + " retrieved stacks, " + finalBurnedCount + " burned stacks, " + finalFallenCount + " fallen stacks, " + finalPendingFetchCount + " pending fetch stacks, " + finalTrackedChunkCount + " tracked chunks."
+                    player.getGameProfile().getName() + ": " + finalLostCount + " lost stacks, " + finalRetrievedCount + " retrieved stacks, " + finalBurnedCount + " burned stacks, " + finalFallenCount + " fallen stacks, " + finalPendingFetchCount + " pending fetch stacks, " + finalTrackedChunkCount + " tracked chunks."
             ), false);
 
             if (lostItems.isEmpty() && retrievedItems.isEmpty() && burnedItems.isEmpty() && fallenItems.isEmpty() && pendingFetchItems.isEmpty()) {

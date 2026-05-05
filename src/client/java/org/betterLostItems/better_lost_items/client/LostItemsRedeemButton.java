@@ -4,9 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.betterLostItems.better_lost_items.Better_lost_items;
 
 /**
@@ -20,11 +19,11 @@ public final class LostItemsRedeemButton extends AbstractWidget {
     public static final int HEIGHT = 22;
     private static final int OVERLAY_SIZE = 18;
 
-    private static final Identifier IDLE_TEXTURE = Better_lost_items.id("textures/gui/button.png");
-    private static final Identifier DISABLED_TEXTURE = Better_lost_items.id("textures/gui/button_disabled.png");
-    private static final Identifier HIGHLIGHTED_TEXTURE = Better_lost_items.id("textures/gui/button_highlighted.png");
-    private static final Identifier SELECTED_TEXTURE = Better_lost_items.id("textures/gui/button_selected.png");
-    private static final Identifier CONFIRM_TEXTURE = Better_lost_items.id("textures/gui/confirm.png");
+    private static final ResourceLocation IDLE_TEXTURE = Better_lost_items.id("textures/gui/button.png");
+    private static final ResourceLocation DISABLED_TEXTURE = Better_lost_items.id("textures/gui/button_disabled.png");
+    private static final ResourceLocation HIGHLIGHTED_TEXTURE = Better_lost_items.id("textures/gui/button_highlighted.png");
+    private static final ResourceLocation SELECTED_TEXTURE = Better_lost_items.id("textures/gui/button_selected.png");
+    private static final ResourceLocation CONFIRM_TEXTURE = Better_lost_items.id("textures/gui/confirm.png");
 
     private final PressAction onPress;
     private final Component tooltip;
@@ -43,8 +42,8 @@ public final class LostItemsRedeemButton extends AbstractWidget {
      * Tracks pressed state for the selected texture.
      */
     @Override
-    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
-        boolean clicked = super.mouseClicked(event, doubleClick);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean clicked = super.mouseClicked(mouseX, mouseY, button);
         if (clicked) {
             this.pressed = true;
         }
@@ -55,21 +54,21 @@ public final class LostItemsRedeemButton extends AbstractWidget {
      * Clears pressed state after mouse release.
      */
     @Override
-    public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.pressed = false;
-        return super.mouseReleased(event);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     /**
      * Runs the redeem callback when active.
      */
     @Override
-    public void onClick(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+    public void onClick(double mouseX, double mouseY) {
         if (!this.active || !this.visible) {
             return;
         }
 
-        playButtonClickSound(Minecraft.getInstance().getSoundManager());
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
         this.onPress.onPress(this);
     }
 
@@ -78,11 +77,10 @@ public final class LostItemsRedeemButton extends AbstractWidget {
      */
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        Identifier texture = this.currentTexture();
+        ResourceLocation texture = this.currentTexture();
         boolean hasCustomTexture = Minecraft.getInstance().getResourceManager().getResource(texture).isPresent();
         if (hasCustomTexture) {
             graphics.blit(
-                    RenderPipelines.GUI_TEXTURED,
                     texture,
                     this.getX(),
                     this.getY(),
@@ -101,7 +99,6 @@ public final class LostItemsRedeemButton extends AbstractWidget {
 
         if (Minecraft.getInstance().getResourceManager().getResource(CONFIRM_TEXTURE).isPresent()) {
             graphics.blit(
-                    RenderPipelines.GUI_TEXTURED,
                     CONFIRM_TEXTURE,
                     this.getX() + ((this.width - OVERLAY_SIZE) / 2),
                     this.getY() + ((this.height - OVERLAY_SIZE) / 2),
@@ -115,14 +112,14 @@ public final class LostItemsRedeemButton extends AbstractWidget {
         }
 
         if (this.isHovered()) {
-            graphics.setTooltipForNextFrame(Minecraft.getInstance().font, this.tooltip, mouseX, mouseY);
+            graphics.renderTooltip(Minecraft.getInstance().font, this.tooltip, mouseX, mouseY);
         }
     }
 
     /**
      * Chooses the texture matching active, pressed, and hovered state.
      */
-    private Identifier currentTexture() {
+    private ResourceLocation currentTexture() {
         if (!this.active) {
             return DISABLED_TEXTURE;
         }

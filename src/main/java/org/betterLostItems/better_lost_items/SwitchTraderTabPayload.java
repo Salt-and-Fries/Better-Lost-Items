@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record SwitchTraderTabPayload(int containerId, boolean recoveryTab) implements CustomPacketPayload {
     public static final Type<SwitchTraderTabPayload> TYPE = CustomPacketPayload.createType("switch_trader_tab");
     public static final StreamCodec<RegistryFriendlyByteBuf, SwitchTraderTabPayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.CONTAINER_ID,
+            ByteBufCodecs.VAR_INT,
             SwitchTraderTabPayload::containerId,
             ByteBufCodecs.BOOL,
             SwitchTraderTabPayload::recoveryTab,

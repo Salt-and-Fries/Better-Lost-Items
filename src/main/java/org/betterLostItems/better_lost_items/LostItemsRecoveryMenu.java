@@ -4,7 +4,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -103,7 +103,7 @@ public class LostItemsRecoveryMenu extends AbstractContainerMenu {
         this.menuData.set(DATA_MARKET_COUNT, marketCount);
 
         this.addRecoverySlots();
-        this.addStandardInventorySlots(playerInventory, PLAYER_INV_X, PLAYER_INV_Y);
+        this.addPlayerInventorySlots(playerInventory, PLAYER_INV_X, PLAYER_INV_Y);
         this.addDataSlots(this.menuData);
 
         if (this.serverPlayer != null) {
@@ -471,6 +471,21 @@ public class LostItemsRecoveryMenu extends AbstractContainerMenu {
             int x = RIGHT_GRID_X + (slot % GRID_COLUMNS) * 18;
             int y = GRID_Y + (slot / GRID_COLUMNS) * 18;
             this.addSlot(new PurchasedSlot(this.purchasedContainer, slot, x, y));
+        }
+    }
+
+    /**
+     * Adds the standard 3-row inventory plus hotbar layout used by vanilla menus in 1.21.1.
+     */
+    private void addPlayerInventorySlots(Inventory inventory, int x, int y) {
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 9; column++) {
+                this.addSlot(new Slot(inventory, column + row * 9 + 9, x + column * 18, y + row * 18));
+            }
+        }
+
+        for (int column = 0; column < 9; column++) {
+            this.addSlot(new Slot(inventory, column, x + column * 18, y + 58));
         }
     }
 

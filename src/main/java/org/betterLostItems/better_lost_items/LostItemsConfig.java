@@ -7,7 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -347,13 +347,13 @@ public final class LostItemsConfig {
             return fallback;
         }
 
-        Identifier identifier = Identifier.tryParse(itemId);
+        ResourceLocation identifier = ResourceLocation.tryParse(itemId);
         if (identifier == null || !BuiltInRegistries.ITEM.containsKey(identifier)) {
             Better_lost_items.LOGGER.warn("Invalid Better Lost Items config item '{}', falling back to {}", itemId, BuiltInRegistries.ITEM.getKey(fallback));
             return fallback;
         }
 
-        return BuiltInRegistries.ITEM.getValue(identifier);
+        return BuiltInRegistries.ITEM.get(identifier);
     }
 
     /**
@@ -365,13 +365,13 @@ public final class LostItemsConfig {
             return fallback;
         }
 
-        Identifier identifier = Identifier.tryParse(potionId);
+        ResourceLocation identifier = ResourceLocation.tryParse(potionId);
         if (identifier == null) {
             Better_lost_items.LOGGER.warn("Invalid Better Lost Items config potion '{}', falling back to {}", potionId, fallback.getRegisteredName());
             return fallback;
         }
 
-        return BuiltInRegistries.POTION.get(identifier).<Holder<Potion>>map(reference -> reference).orElseGet(() -> {
+        return BuiltInRegistries.POTION.getHolder(identifier).<Holder<Potion>>map(reference -> reference).orElseGet(() -> {
             Better_lost_items.LOGGER.warn("Unknown Better Lost Items config potion '{}', falling back to {}", potionId, fallback.getRegisteredName());
             return fallback;
         });

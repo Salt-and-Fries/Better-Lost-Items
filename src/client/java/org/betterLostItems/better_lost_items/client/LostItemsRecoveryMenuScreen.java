@@ -1,13 +1,11 @@
 package org.betterLostItems.better_lost_items.client;
 
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -46,10 +44,10 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     private static final int FETCH_STATUS_SIZE = 4;
     private static final int FETCH_STATUS_Y_OFFSET = 7;
     private static final int FETCH_STATUS_HOVER_PADDING = 3;
-    private static final Identifier COMPLETE_TEXTURE = Better_lost_items.id("textures/gui/complete.png");
-    private static final Identifier INCOMPLETE_TEXTURE = Better_lost_items.id("textures/gui/incomplete.png");
-    private static final Identifier SCROLLER_SPRITE = Identifier.withDefaultNamespace("container/villager/scroller");
-    private static final Identifier SCROLLER_DISABLED_SPRITE = Identifier.withDefaultNamespace("container/villager/scroller_disabled");
+    private static final ResourceLocation COMPLETE_TEXTURE = Better_lost_items.id("textures/gui/complete.png");
+    private static final ResourceLocation INCOMPLETE_TEXTURE = Better_lost_items.id("textures/gui/incomplete.png");
+    private static final ResourceLocation SCROLLER_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller");
+    private static final ResourceLocation SCROLLER_DISABLED_SPRITE = ResourceLocation.withDefaultNamespace("container/villager/scroller_disabled");
 
     private LostItemsTabButton marketTab;
     private LostItemsTabButton recoveryTab;
@@ -143,7 +141,6 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     @Override
     protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
         graphics.blit(
-                RenderPipelines.GUI_TEXTURED,
                 this.backgroundTexture(),
                 this.leftPos,
                 this.topPos,
@@ -221,44 +218,44 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
      * Starts scrollbar dragging when the user clicks a visible scrollbar.
      */
     @Override
-    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         int scrollBarY = this.topPos + LostItemsRecoveryMenu.GRID_Y;
-        if (this.tryStartScrollbarDrag(DraggingScrollbar.LEFT, this.leftScrollBarX(), scrollBarY, event)) {
+        if (this.tryStartScrollbarDrag(DraggingScrollbar.LEFT, this.leftScrollBarX(), scrollBarY, mouseX, mouseY)) {
             return true;
         }
 
-        if (this.tryStartScrollbarDrag(DraggingScrollbar.RIGHT, this.rightScrollBarX(), scrollBarY, event)) {
+        if (this.tryStartScrollbarDrag(DraggingScrollbar.RIGHT, this.rightScrollBarX(), scrollBarY, mouseX, mouseY)) {
             return true;
         }
 
-        return super.mouseClicked(event, doubleClick);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     /**
      * Converts mouse drag motion into synced grid scroll rows.
      */
     @Override
-    public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent event, double dragX, double dragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (this.activeScrollbar == DraggingScrollbar.LEFT) {
-            this.dragScrollbar(DraggingScrollbar.LEFT, event.y());
+            this.dragScrollbar(DraggingScrollbar.LEFT, mouseY);
             return true;
         }
 
         if (this.activeScrollbar == DraggingScrollbar.RIGHT) {
-            this.dragScrollbar(DraggingScrollbar.RIGHT, event.y());
+            this.dragScrollbar(DraggingScrollbar.RIGHT, mouseY);
             return true;
         }
 
-        return super.mouseDragged(event, dragX, dragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     /**
      * Ends scrollbar dragging.
      */
     @Override
-    public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.activeScrollbar = DraggingScrollbar.NONE;
-        return super.mouseReleased(event);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     /**
@@ -349,13 +346,13 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Starts dragging a scrollbar when it is active and under the cursor.
      */
-    private boolean tryStartScrollbarDrag(DraggingScrollbar scrollbar, int x, int y, net.minecraft.client.input.MouseButtonEvent event) {
-        if (!this.canDragScrollbar(scrollbar) || !this.isHoveringScrollbar(x, y, event.x(), event.y())) {
+    private boolean tryStartScrollbarDrag(DraggingScrollbar scrollbar, int x, int y, double mouseX, double mouseY) {
+        if (!this.canDragScrollbar(scrollbar) || !this.isHoveringScrollbar(x, y, mouseX, mouseY)) {
             return false;
         }
 
         this.activeScrollbar = scrollbar;
-        this.dragScrollbar(scrollbar, event.y());
+        this.dragScrollbar(scrollbar, mouseY);
         return true;
     }
 
@@ -432,7 +429,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * @return active background texture based on configured fetch features
      */
-    private Identifier backgroundTexture() {
+    private ResourceLocation backgroundTexture() {
         return Better_lost_items.id(LostItemsConfig.fetchLayout().texturePath());
     }
 
@@ -494,7 +491,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
         ItemStack ghostStack = stack.copy();
         graphics.renderFakeItem(ghostStack, x, y);
         graphics.renderItemDecorations(this.font, ghostStack, x, y);
-        graphics.fill(RenderPipelines.GUI, x, y, x + 16, y + 16, GHOST_ITEM_OVERLAY_COLOR);
+        graphics.fill(x, y, x + 16, y + 16, GHOST_ITEM_OVERLAY_COLOR);
     }
 
     /**
@@ -524,9 +521,8 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
             return;
         }
 
-        Identifier texture = complete ? COMPLETE_TEXTURE : INCOMPLETE_TEXTURE;
+        ResourceLocation texture = complete ? COMPLETE_TEXTURE : INCOMPLETE_TEXTURE;
         graphics.blit(
-                RenderPipelines.GUI_TEXTURED,
                 texture,
                 this.fetchStatusX(slotX),
                 this.fetchStatusY(),
@@ -548,17 +544,17 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
         }
 
         if (this.isHoveringFetchStatus(LostItemsConfig.journeySlotX(), mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, this.journeyTooltip(), mouseX, mouseY);
+            graphics.renderTooltip(this.font, this.journeyTooltip(), mouseX, mouseY);
             return;
         }
 
         if (LostItemsConfig.isBurnedFetchEnabled() && this.isHoveringFetchStatus(LostItemsConfig.burnedSlotX(), mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, this.burnedTooltip(), mouseX, mouseY);
+            graphics.renderTooltip(this.font, this.burnedTooltip(), mouseX, mouseY);
             return;
         }
 
         if (LostItemsConfig.isVoidFetchEnabled() && this.isHoveringFetchStatus(LostItemsConfig.voidSlotX(), mouseX, mouseY)) {
-            graphics.setTooltipForNextFrame(this.font, this.voidTooltip(), mouseX, mouseY);
+            graphics.renderTooltip(this.font, this.voidTooltip(), mouseX, mouseY);
         }
     }
 
@@ -584,7 +580,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
         }
 
         if (tooltip != null) {
-            graphics.setTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
+            graphics.renderTooltip(this.font, tooltip, mouseX, mouseY);
         }
     }
 
@@ -733,12 +729,8 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
      * Draws a vanilla villager-style scrollbar and requests a matching cursor while hovered.
      */
     private void drawScrollBar(GuiGraphics graphics, int x, int y, int scrollRow, int maxScrollRow, boolean hovered, boolean dragging) {
-        Identifier sprite = maxScrollRow > 0 ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, this.thumbY(y, scrollRow, maxScrollRow), SCROLLBAR_WIDTH, SCROLLER_HEIGHT);
-
-        if (hovered) {
-            graphics.requestCursor(dragging ? CursorTypes.RESIZE_NS : CursorTypes.POINTING_HAND);
-        }
+        ResourceLocation sprite = maxScrollRow > 0 ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
+        graphics.blitSprite(sprite, x, this.thumbY(y, scrollRow, maxScrollRow), SCROLLBAR_WIDTH, SCROLLER_HEIGHT);
     }
 
     /**

@@ -49,7 +49,7 @@ public final class LostItemsDebug {
      */
     public static int emeraldCount(ServerPlayer player) {
         int emeralds = 0;
-        for (ItemStack stack : player.getInventory().getNonEquipmentItems()) {
+        for (ItemStack stack : player.getInventory().items) {
             if (stack.is(Items.EMERALD)) {
                 emeralds += stack.getCount();
             }

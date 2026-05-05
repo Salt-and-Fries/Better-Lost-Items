@@ -6,7 +6,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
@@ -139,12 +138,12 @@ public final class LostItemsRecoveryScreen extends Screen {
      * Handles clicking retrieved items in the right grid.
      */
     @Override
-    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
-        if (super.mouseClicked(event, doubleClick)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (super.mouseClicked(mouseX, mouseY, button)) {
             return true;
         }
 
-        LostItemEntry clickedPurchasedItem = entryAt(this.state.purchasedItems(), rightGridX(), gridY(), this.rightScrollRow, event.x(), event.y());
+        LostItemEntry clickedPurchasedItem = entryAt(this.state.purchasedItems(), rightGridX(), gridY(), this.rightScrollRow, mouseX, mouseY);
         if (clickedPurchasedItem != null) {
             ClientPlayNetworking.send(new CollectRecoveryItemPayload(this.state.traderEntityId(), clickedPurchasedItem.id()));
             return true;
@@ -225,7 +224,7 @@ public final class LostItemsRecoveryScreen extends Screen {
 
             if (mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 16) {
                 graphics.renderOutline(x - 1, y - 1, 18, 18, purchased ? 0xFF7BC07B : 0xFFBFBF7B);
-                graphics.setTooltipForNextFrame(this.font, entry.stack(), mouseX, mouseY);
+                graphics.renderTooltip(this.font, entry.stack(), mouseX, mouseY);
             }
         }
 
@@ -327,7 +326,7 @@ public final class LostItemsRecoveryScreen extends Screen {
         }
 
         int emeralds = 0;
-        for (ItemStack stack : Minecraft.getInstance().player.getInventory().getNonEquipmentItems()) {
+        for (ItemStack stack : Minecraft.getInstance().player.getInventory().items) {
             if (stack.is(Items.EMERALD)) {
                 emeralds += stack.getCount();
             }

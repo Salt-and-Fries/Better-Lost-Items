@@ -16,7 +16,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public record TraderTabStatePayload(int containerId, boolean recoveryTab, int marketCount, int recoveryCount) implements CustomPacketPayload {
     public static final Type<TraderTabStatePayload> TYPE = CustomPacketPayload.createType("trader_tab_state");
     public static final StreamCodec<RegistryFriendlyByteBuf, TraderTabStatePayload> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.CONTAINER_ID,
+            ByteBufCodecs.VAR_INT,
             TraderTabStatePayload::containerId,
             ByteBufCodecs.BOOL,
             TraderTabStatePayload::recoveryTab,

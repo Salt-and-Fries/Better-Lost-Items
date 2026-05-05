@@ -51,7 +51,7 @@ public record LostItemPrice(ItemCost primaryCost, Optional<ItemCost> secondaryCo
         value += enchantments.entrySet().stream().mapToDouble(entry -> 1.1D * entry.getIntValue()).sum();
         value += storedEnchantments.entrySet().stream().mapToDouble(entry -> 1.4D * entry.getIntValue()).sum();
 
-        if (stack.hasNonDefault(DataComponents.CUSTOM_NAME)) {
+        if (stack.has(DataComponents.CUSTOM_NAME)) {
             value += 0.75D;
         }
 

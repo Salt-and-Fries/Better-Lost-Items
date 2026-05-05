@@ -395,7 +395,7 @@ public final class LostItemsStorage {
             return false;
         }
 
-        Better_lost_items.LOGGER.info("[BLI DEBUG] Storage addTrackedDeathChunk player={} dimension={} chunk={},{}", playerId, dimension.identifier(), chunkX, chunkZ);
+        Better_lost_items.LOGGER.info("[BLI DEBUG] Storage addTrackedDeathChunk player={} dimension={} chunk={},{}", playerId, dimension.location(), chunkX, chunkZ);
         data.trackedChunks().add(trackedChunk);
         this.savePlayerEntries(playerId, data);
         return true;
@@ -411,7 +411,7 @@ public final class LostItemsStorage {
             Better_lost_items.LOGGER.info(
                     "[BLI DEBUG] Storage removeTrackedDeathChunk player={} dimension={} chunk={},{}",
                     playerId,
-                    trackedChunk.dimension().identifier(),
+                    trackedChunk.dimension().location(),
                     trackedChunk.chunkX(),
                     trackedChunk.chunkZ()
             );

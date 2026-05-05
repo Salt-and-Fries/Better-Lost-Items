@@ -1,6 +1,6 @@
 package org.betterLostItems.better_lost_items.mixin;
 
-import net.minecraft.world.entity.npc.villager.AbstractVillager;
+import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.item.trading.MerchantOffer;
 import org.betterLostItems.better_lost_items.LostItemsTradeController;
 import org.spongepowered.asm.mixin.Mixin;

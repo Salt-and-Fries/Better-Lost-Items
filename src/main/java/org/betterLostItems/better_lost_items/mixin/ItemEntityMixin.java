@@ -1,6 +1,6 @@
 package org.betterLostItems.better_lost_items.mixin;
 
-import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -8,8 +8,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.entity.EntityTypeTest;
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
 import org.betterLostItems.better_lost_items.Better_lost_items;
 import org.betterLostItems.better_lost_items.DeathDropTrackingContext;
@@ -64,16 +62,18 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
      * Persists the custom owner UUID with the vanilla item entity save data.
      */
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void betterLostItems$writeTrackedOwner(ValueOutput output, CallbackInfo ci) {
-        output.storeNullable("BetterLostItemsOwner", UUIDUtil.CODEC, this.betterLostItems$ownerId);
+    private void betterLostItems$writeTrackedOwner(CompoundTag tag, CallbackInfo ci) {
+        if (this.betterLostItems$ownerId != null) {
+            tag.putUUID("BetterLostItemsOwner", this.betterLostItems$ownerId);
+        }
     }
 
     /**
      * Restores the custom owner UUID when a chunk is loaded.
      */
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void betterLostItems$readTrackedOwner(ValueInput input, CallbackInfo ci) {
-        this.betterLostItems$ownerId = input.read("BetterLostItemsOwner", UUIDUtil.CODEC).orElse(null);
+    private void betterLostItems$readTrackedOwner(CompoundTag tag, CallbackInfo ci) {
+        this.betterLostItems$ownerId = tag.hasUUID("BetterLostItemsOwner") ? tag.getUUID("BetterLostItemsOwner") : null;
     }
 
     /**
@@ -112,7 +112,7 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
             return;
         }
 
-        if (!itemEntity.isRemoved() || itemEntity.getY() >= serverLevel.getMinY() - 64.0D) {
+        if (!itemEntity.isRemoved() || itemEntity.getY() >= serverLevel.getMinBuildHeight() - 64.0D) {
             return;
         }
 
@@ -136,10 +136,10 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
     /**
      * Captures tagged death loot destroyed by environmental damage.
      */
-    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;discard()V"))
-    private void betterLostItems$storeDestroyedDeathLoot(ServerLevel serverLevel, DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;discard()V"))
+    private void betterLostItems$storeDestroyedDeathLoot(DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
         ItemEntity itemEntity = (ItemEntity) (Object) this;
-        if (this.betterLostItems$ownerId == null) {
+        if (this.betterLostItems$ownerId == null || !(itemEntity.level() instanceof ServerLevel serverLevel)) {
             return;
         }
 
@@ -167,8 +167,8 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
     /**
      * Pushes the owner while a destroyed container item emits its contents.
      */
-    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V"))
-    private void betterLostItems$pushDestroyedContainerOwner(ServerLevel serverLevel, DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V"))
+    private void betterLostItems$pushDestroyedContainerOwner(DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.betterLostItems$ownerId != null) {
             DeathDropTrackingContext.push(this.betterLostItems$ownerId);
         }
@@ -177,8 +177,8 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
     /**
      * Pops the temporary owner after destroyed-container contents have spawned.
      */
-    @Inject(method = "hurtServer", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V", shift = At.Shift.AFTER))
-    private void betterLostItems$popDestroyedContainerOwner(ServerLevel serverLevel, DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;onDestroyed(Lnet/minecraft/world/entity/item/ItemEntity;)V", shift = At.Shift.AFTER))
+    private void betterLostItems$popDestroyedContainerOwner(DamageSource damageSource, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.betterLostItems$ownerId != null) {
             DeathDropTrackingContext.pop();
         }
@@ -231,15 +231,15 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
 
         AABB bounds = new AABB(
                 chunkPos.getMinBlockX(),
-                serverLevel.getMinY(),
+                serverLevel.getMinBuildHeight(),
                 chunkPos.getMinBlockZ(),
                 chunkPos.getMaxBlockX() + 1,
-                serverLevel.getMaxY(),
+                serverLevel.getMaxBuildHeight(),
                 chunkPos.getMaxBlockZ() + 1
         );
 
-        boolean hasOtherOwnedItems = serverLevel.hasEntities(EntityTypeTest.forClass(ItemEntity.class), bounds,
-                item -> item.getId() != ignoredEntityId && this.betterLostItems$ownerId.equals(((TrackedItemEntity) item).betterLostItems$getOwnerId()));
+        boolean hasOtherOwnedItems = !serverLevel.getEntities(EntityTypeTest.forClass(ItemEntity.class), bounds,
+                item -> item.getId() != ignoredEntityId && this.betterLostItems$ownerId.equals(((TrackedItemEntity) item).betterLostItems$getOwnerId())).isEmpty();
         if (!hasOtherOwnedItems) {
             LostItemsStorageManager.get(serverLevel.getServer()).removeTrackedDeathChunk(
                     this.betterLostItems$ownerId,

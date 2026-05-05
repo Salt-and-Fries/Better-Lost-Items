@@ -5,12 +5,12 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacementType;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.entity.animal.equine.TraderLlama;
-import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.entity.animal.horse.TraderLlama;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -198,7 +198,6 @@ public final class LostItemsTraderJourneyManager {
             ServerPlayer player = server.getPlayerList().getPlayer(departure.playerId());
             if (player != null && player.level().dimension() == departure.dimension()) {
                 trader.setWanderTarget(departure.target());
-                trader.setHomeTo(departure.target(), 16);
                 if (trader.distanceToSqr(player) >= DEPARTURE_DESPAWN_DISTANCE_SQR || departure.ageTicks() >= DEPARTURE_TIMEOUT_TICKS) {
                     trader.discard();
                     iterator.remove();
@@ -270,7 +269,7 @@ public final class LostItemsTraderJourneyManager {
      */
     private static boolean hasNearbyTrader(ServerPlayer player, int radius) {
         AABB bounds = player.getBoundingBox().inflate(radius);
-        return player.level().hasEntities(EntityTypeTest.forClass(WanderingTrader.class), bounds, WanderingTrader::isAlive);
+        return !player.level().getEntities(EntityTypeTest.forClass(WanderingTrader.class), bounds, WanderingTrader::isAlive).isEmpty();
     }
 
     /**
@@ -289,6 +288,7 @@ public final class LostItemsTraderJourneyManager {
      * Chooses a destination roughly away from the player.
      */
     private static BlockPos departureTarget(ServerPlayer player, WanderingTrader trader) {
+        ServerLevel level = (ServerLevel) player.level();
         Vec3 away = trader.position().subtract(player.position());
         if (away.horizontalDistanceSqr() < 1.0E-4D) {
             away = new Vec3(1.0D, 0.0D, 0.0D);
@@ -296,30 +296,30 @@ public final class LostItemsTraderJourneyManager {
 
         Vec3 normalized = new Vec3(away.x, 0.0D, away.z).normalize();
         BlockPos roughTarget = BlockPos.containing(trader.getX() + normalized.x * DEPARTURE_TARGET_DISTANCE, trader.getY(), trader.getZ() + normalized.z * DEPARTURE_TARGET_DISTANCE);
-        return findSpawnPositionNear(player.level(), roughTarget, 8);
+        return findSpawnPositionNear(level, roughTarget, 8);
     }
 
     /**
      * Spawns a wandering trader and two llamas near the player.
      */
     private static WanderingTrader spawnTraderNear(ServerPlayer player, int radius) {
-        BlockPos spawnPos = findSpawnPositionNear(player.level(), player.blockPosition(), radius);
+        ServerLevel level = (ServerLevel) player.level();
+        BlockPos spawnPos = findSpawnPositionNear(level, player.blockPosition(), radius);
         if (spawnPos == null) {
             return null;
         }
 
-        WanderingTrader trader = EntityType.WANDERING_TRADER.spawn(player.level(), spawnPos, EntitySpawnReason.EVENT);
+        WanderingTrader trader = EntityType.WANDERING_TRADER.spawn(level, spawnPos, MobSpawnType.EVENT);
         if (trader == null) {
             return null;
         }
 
         for (int index = 0; index < 2; index++) {
-            spawnTraderLlama(player.level(), trader);
+            spawnTraderLlama(level, trader);
         }
 
         trader.setDespawnDelay(48000);
         trader.setWanderTarget(player.blockPosition());
-        trader.setHomeTo(player.blockPosition(), 16);
         return trader;
     }
 
@@ -332,7 +332,7 @@ public final class LostItemsTraderJourneyManager {
             return;
         }
 
-        TraderLlama llama = EntityType.TRADER_LLAMA.spawn(level, llamaPos, EntitySpawnReason.EVENT);
+        TraderLlama llama = EntityType.TRADER_LLAMA.spawn(level, llamaPos, MobSpawnType.EVENT);
         if (llama != null) {
             llama.setLeashedTo(trader, true);
         }

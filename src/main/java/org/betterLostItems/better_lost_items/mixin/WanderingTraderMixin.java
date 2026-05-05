@@ -1,16 +1,17 @@
 package org.betterLostItems.better_lost_items.mixin;
 
-import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.stats.Stats;
-import net.minecraft.server.level.ServerLevel;
 import org.betterLostItems.better_lost_items.mixin.AbstractVillagerAccessor;
 import org.betterLostItems.better_lost_items.LostItemsTradeController;
 import org.betterLostItems.better_lost_items.LostItemsTraderJourneyManager;
@@ -22,9 +23,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.world.level.storage.ValueInput;
-import net.minecraft.world.level.storage.ValueOutput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -143,9 +141,10 @@ public abstract class WanderingTraderMixin implements LostTraderSession {
      * Locks a market selection when vanilla generates trader offers during spawn.
      */
     @Inject(method = "updateTrades", at = @At("TAIL"))
-    private void betterLostItems$lockMarketSelectionOnTradeGeneration(ServerLevel serverLevel, CallbackInfo ci) {
+    private void betterLostItems$lockMarketSelectionOnTradeGeneration(CallbackInfo ci) {
         this.betterLostItems$setRegularOffers(((AbstractVillagerAccessor) this).betterLostItems$getOffers());
-        if (!this.betterLostItems$marketSelectionLocked) {
+        WanderingTrader trader = (WanderingTrader) (Object) this;
+        if (!this.betterLostItems$marketSelectionLocked && trader.level() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
             LostItemsTradeController.ensureMarketSelectionLocked((WanderingTrader) (Object) this, serverLevel.getServer());
         }
     }
@@ -161,18 +160,28 @@ public abstract class WanderingTraderMixin implements LostTraderSession {
      * Persists custom market selection data on the trader entity.
      */
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void betterLostItems$saveMarketSelection(ValueOutput output, CallbackInfo ci) {
-        output.putBoolean("BetterLostItemsMarketSelectionLocked", this.betterLostItems$marketSelectionLocked);
-        output.store("BetterLostItemsMarketSelectionIds", UUIDUtil.CODEC.listOf(), List.copyOf(this.betterLostItems$marketSelectionIds));
+    private void betterLostItems$saveMarketSelection(CompoundTag tag, CallbackInfo ci) {
+        tag.putBoolean("BetterLostItemsMarketSelectionLocked", this.betterLostItems$marketSelectionLocked);
+        ListTag ids = new ListTag();
+        for (UUID id : this.betterLostItems$marketSelectionIds) {
+            ids.add(StringTag.valueOf(id.toString()));
+        }
+        tag.put("BetterLostItemsMarketSelectionIds", ids);
     }
 
     /**
      * Restores custom market selection data from the trader entity save data.
      */
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void betterLostItems$loadMarketSelection(ValueInput input, CallbackInfo ci) {
-        this.betterLostItems$marketSelectionLocked = input.getBooleanOr("BetterLostItemsMarketSelectionLocked", false);
+    private void betterLostItems$loadMarketSelection(CompoundTag tag, CallbackInfo ci) {
+        this.betterLostItems$marketSelectionLocked = tag.getBoolean("BetterLostItemsMarketSelectionLocked");
         this.betterLostItems$marketSelectionIds.clear();
-        this.betterLostItems$marketSelectionIds.addAll(input.read("BetterLostItemsMarketSelectionIds", UUIDUtil.CODEC.listOf()).orElse(List.of()));
+        ListTag ids = tag.getList("BetterLostItemsMarketSelectionIds", 8);
+        for (int index = 0; index < ids.size(); index++) {
+            try {
+                this.betterLostItems$marketSelectionIds.add(UUID.fromString(ids.getString(index)));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
     }
 }

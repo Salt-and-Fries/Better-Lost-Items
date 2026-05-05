@@ -1,7 +1,7 @@
 package org.betterLostItems.better_lost_items.mixin;
 
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.inventory.MerchantContainer;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.inventory.Slot;

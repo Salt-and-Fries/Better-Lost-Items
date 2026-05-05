@@ -1,6 +1,5 @@
 package org.betterLostItems.better_lost_items.mixin;
 
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import org.betterLostItems.better_lost_items.TrackedItemEntity;
@@ -18,7 +17,7 @@ public abstract class MobMixin {
      * Cancels mob pickup for item entities tagged with a death owner.
      */
     @Inject(method = "pickUpItem", at = @At("HEAD"), cancellable = true)
-    private void betterLostItems$preventDeathLootPickup(ServerLevel serverLevel, ItemEntity itemEntity, CallbackInfo ci) {
+    private void betterLostItems$preventDeathLootPickup(ItemEntity itemEntity, CallbackInfo ci) {
         if (((TrackedItemEntity) itemEntity).betterLostItems$getOwnerId() != null) {
             ci.cancel();
         }

@@ -4,9 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 /**
@@ -20,10 +19,10 @@ public final class LostItemsTabButton extends AbstractWidget {
     private static final int TAB_HEIGHT = 32;
     private static final int UNSELECTED_Y_OFFSET = 4;
 
-    private static final Identifier LEFT_UNSELECTED = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_2");
-    private static final Identifier LEFT_SELECTED = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_2");
-    private static final Identifier RIGHT_UNSELECTED = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_unselected_3");
-    private static final Identifier RIGHT_SELECTED = Identifier.withDefaultNamespace("container/creative_inventory/tab_top_selected_3");
+    private static final ResourceLocation LEFT_UNSELECTED = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_2");
+    private static final ResourceLocation LEFT_SELECTED = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_2");
+    private static final ResourceLocation RIGHT_UNSELECTED = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_unselected_3");
+    private static final ResourceLocation RIGHT_SELECTED = ResourceLocation.withDefaultNamespace("container/creative_inventory/tab_top_selected_3");
 
     private final ItemStack icon;
     private final PressAction onPress;
@@ -68,13 +67,13 @@ public final class LostItemsTabButton extends AbstractWidget {
      * Captures mouse position before screen recreation and runs the tab action.
      */
     @Override
-    public void onClick(net.minecraft.client.input.MouseButtonEvent event, boolean bl) {
+    public void onClick(double mouseX, double mouseY) {
         if (!this.active || !this.visible) {
             return;
         }
 
         LostItemsClientState.capturePendingMouse();
-        playButtonClickSound(Minecraft.getInstance().getSoundManager());
+        this.playDownSound(Minecraft.getInstance().getSoundManager());
         this.onPress.onPress(this);
     }
 
@@ -83,10 +82,10 @@ public final class LostItemsTabButton extends AbstractWidget {
      */
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        Identifier sprite = this.leftTab
+        ResourceLocation sprite = this.leftTab
                 ? (this.selected ? LEFT_SELECTED : LEFT_UNSELECTED)
                 : (this.selected ? RIGHT_SELECTED : RIGHT_UNSELECTED);
-        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, this.getX(), this.getY(), this.width, this.height);
+        graphics.blitSprite( sprite, this.getX(), this.getY(), this.width, this.height);
         graphics.renderItem(this.icon, this.getX() + 5, this.getY() + 8);
 
         if (!this.active && !this.selected) {
@@ -94,7 +93,7 @@ public final class LostItemsTabButton extends AbstractWidget {
         }
 
         if (this.isHovered()) {
-            graphics.setTooltipForNextFrame(Minecraft.getInstance().font, this.tooltip, mouseX, mouseY);
+            graphics.renderTooltip(Minecraft.getInstance().font, this.tooltip, mouseX, mouseY);
         }
     }
 

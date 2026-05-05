@@ -79,7 +79,7 @@ public final class LostItemsClientState {
         }
 
         Minecraft minecraft = Minecraft.getInstance();
-        GLFW.glfwSetCursorPos(minecraft.getWindow().handle(), pendingMouseX, pendingMouseY);
+        GLFW.glfwSetCursorPos(minecraft.getWindow().getWindow(), pendingMouseX, pendingMouseY);
         minecraft.mouseHandler.setIgnoreFirstMove();
         pendingMouseX = Double.NaN;
         pendingMouseY = Double.NaN;

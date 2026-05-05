@@ -5,10 +5,9 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.betterLostItems.better_lost_items.LostItemsConfig;
 
@@ -163,9 +162,9 @@ public final class BetterLostItemsConfigScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         this.renderTransparentBackground(graphics);
-        graphics.fill(RenderPipelines.GUI, 0, 0, this.width, this.height, 0xB0000000);
-        graphics.fill(RenderPipelines.GUI, 0, 0, this.width, LIST_TOP - 8, 0xA0000000);
-        graphics.fill(RenderPipelines.GUI, 0, this.listBottom(), this.width, this.height, 0xC0000000);
+        graphics.fill(0, 0, this.width, this.height, 0xB0000000);
+        graphics.fill(0, 0, this.width, LIST_TOP - 8, 0xA0000000);
+        graphics.fill(0, this.listBottom(), this.width, this.height, 0xC0000000);
         graphics.drawCenteredString(this.font, this.title, this.width / 2, 16, TITLE_COLOR);
 
         for (Label label : this.labels) {
@@ -202,36 +201,36 @@ public final class BetterLostItemsConfigScreen extends Screen {
      * Starts scrollbar dragging when the scrollbar track is clicked.
      */
     @Override
-    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean doubleClick) {
-        if (this.isHoveringScrollbar(event.x(), event.y())) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.isHoveringScrollbar(mouseX, mouseY)) {
             this.draggingScrollbar = true;
-            this.dragScrollbarTo(event.y());
+            this.dragScrollbarTo(mouseY);
             return true;
         }
 
-        return super.mouseClicked(event, doubleClick);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     /**
      * Updates scroll position while the scrollbar thumb is dragged.
      */
     @Override
-    public boolean mouseDragged(net.minecraft.client.input.MouseButtonEvent event, double dragX, double dragY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (this.draggingScrollbar) {
-            this.dragScrollbarTo(event.y());
+            this.dragScrollbarTo(mouseY);
             return true;
         }
 
-        return super.mouseDragged(event, dragX, dragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     /**
      * Stops scrollbar dragging.
      */
     @Override
-    public boolean mouseReleased(net.minecraft.client.input.MouseButtonEvent event) {
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         this.draggingScrollbar = false;
-        return super.mouseReleased(event);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     /**
@@ -463,7 +462,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
      * Adds an error if a field does not contain a registered item ID.
      */
     private void requireItem(List<String> errors, String label, EditBox field) {
-        Identifier identifier = Identifier.tryParse(this.normalizedText(field));
+        ResourceLocation identifier = ResourceLocation.tryParse(this.normalizedText(field));
         if (identifier == null || !BuiltInRegistries.ITEM.containsKey(identifier)) {
             errors.add(label + " must be a valid item ID.");
         }
@@ -473,8 +472,8 @@ public final class BetterLostItemsConfigScreen extends Screen {
      * Adds an error if a field does not contain a registered potion ID.
      */
     private void requirePotion(List<String> errors, String label, EditBox field) {
-        Identifier identifier = Identifier.tryParse(this.normalizedText(field));
-        if (identifier == null || BuiltInRegistries.POTION.get(identifier).isEmpty()) {
+        ResourceLocation identifier = ResourceLocation.tryParse(this.normalizedText(field));
+        if (identifier == null || !BuiltInRegistries.POTION.containsKey(identifier)) {
             errors.add(label + " must be a valid potion ID.");
         }
     }
@@ -507,9 +506,9 @@ public final class BetterLostItemsConfigScreen extends Screen {
         int trackHeight = this.scrollbarHeight();
         int thumbHeight = this.scrollbarThumbHeight();
         int thumbY = this.scrollbarThumbY();
-        graphics.fill(RenderPipelines.GUI, trackX, trackY, trackX + 6, trackY + trackHeight, 0x66000000);
-        graphics.fill(RenderPipelines.GUI, trackX, thumbY, trackX + 6, thumbY + thumbHeight, 0xFF808080);
-        graphics.fill(RenderPipelines.GUI, trackX + 1, thumbY + 1, trackX + 5, thumbY + thumbHeight - 1, 0xFFC0C0C0);
+        graphics.fill(trackX, trackY, trackX + 6, trackY + trackHeight, 0x66000000);
+        graphics.fill(trackX, thumbY, trackX + 6, thumbY + thumbHeight, 0xFF808080);
+        graphics.fill(trackX + 1, thumbY + 1, trackX + 5, thumbY + thumbHeight - 1, 0xFFC0C0C0);
     }
 
     /**
@@ -528,7 +527,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
                     && mouseY < y + ROW_HEIGHT
                     && y + ROW_HEIGHT > LIST_TOP
                     && y < this.listBottom()) {
-                graphics.setTooltipForNextFrame(this.font, Component.literal(label.tooltip()), mouseX, mouseY);
+                graphics.renderTooltip(this.font, Component.literal(label.tooltip()), mouseX, mouseY);
                 return;
             }
         }

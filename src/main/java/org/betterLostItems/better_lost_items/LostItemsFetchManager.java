@@ -5,7 +5,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.TicketType;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
+import net.minecraft.world.entity.npc.WanderingTrader;
 import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.entity.EntityTypeTest;
@@ -162,12 +162,12 @@ public final class LostItemsFetchManager {
             Better_lost_items.LOGGER.info(
                     "[BLI DEBUG] Fetch starting player={} dimension={} chunk={},{} remainingAfterStart={}",
                     this.playerId,
-                    this.activeChunk.dimension().identifier(),
+                    this.activeChunk.dimension().location(),
                     chunkPos.x,
                     chunkPos.z,
                     this.pendingChunks.size()
             );
-            level.getChunkSource().addTicketWithRadius(FETCH_TICKET_TYPE, chunkPos, FETCH_TICKET_RADIUS);
+            level.getChunkSource().addRegionTicket(FETCH_TICKET_TYPE, chunkPos, FETCH_TICKET_RADIUS, chunkPos);
         }
 
         /**
@@ -177,10 +177,10 @@ public final class LostItemsFetchManager {
             ChunkPos chunkPos = this.activeChunk.chunkPos();
             AABB bounds = new AABB(
                     chunkPos.getMinBlockX(),
-                    level.getMinY(),
+                    level.getMinBuildHeight(),
                     chunkPos.getMinBlockZ(),
                     chunkPos.getMaxBlockX() + 1,
-                    level.getMaxY(),
+                    level.getMaxBuildHeight(),
                     chunkPos.getMaxBlockZ() + 1
             );
 
@@ -199,7 +199,7 @@ public final class LostItemsFetchManager {
 
             // Once scanned, the chunk marker is removed even if it contained no matching items.
             storage.removeTrackedDeathChunk(this.playerId, this.activeChunk);
-            level.getChunkSource().removeTicketWithRadius(FETCH_TICKET_TYPE, chunkPos, FETCH_TICKET_RADIUS);
+            level.getChunkSource().removeRegionTicket(FETCH_TICKET_TYPE, chunkPos, FETCH_TICKET_RADIUS, chunkPos);
 
             this.scannedChunks++;
             this.collectedStacks += movedStacks;
@@ -207,7 +207,7 @@ public final class LostItemsFetchManager {
             Better_lost_items.LOGGER.info(
                     "[BLI DEBUG] Fetch scanned player={} dimension={} chunk={},{} collectedStacksInChunk={} totalCollectedStacks={} remainingChunks={}",
                     this.playerId,
-                    this.activeChunk.dimension().identifier(),
+                    this.activeChunk.dimension().location(),
                     chunkPos.x,
                     chunkPos.z,
                     movedStacks,
@@ -230,7 +230,7 @@ public final class LostItemsFetchManager {
 
             ServerLevel level = server.getLevel(this.activeChunk.dimension());
             if (level != null) {
-                level.getChunkSource().removeTicketWithRadius(FETCH_TICKET_TYPE, this.activeChunk.chunkPos(), FETCH_TICKET_RADIUS);
+                level.getChunkSource().removeRegionTicket(FETCH_TICKET_TYPE, this.activeChunk.chunkPos(), FETCH_TICKET_RADIUS, this.activeChunk.chunkPos());
             }
 
             this.activeChunk = null;
@@ -243,7 +243,7 @@ public final class LostItemsFetchManager {
             if (this.activeChunk != null) {
                 ServerLevel level = server.getLevel(this.activeChunk.dimension());
                 if (level != null) {
-                    level.getChunkSource().removeTicketWithRadius(FETCH_TICKET_TYPE, this.activeChunk.chunkPos(), FETCH_TICKET_RADIUS);
+                    level.getChunkSource().removeRegionTicket(FETCH_TICKET_TYPE, this.activeChunk.chunkPos(), FETCH_TICKET_RADIUS, this.activeChunk.chunkPos());
                 }
             }
         }
