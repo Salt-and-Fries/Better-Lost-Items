@@ -1,5 +1,7 @@
 package org.betterLostItems.better_lost_items;
 
+import net.minecraft.world.item.trading.MerchantOffers;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -39,4 +41,14 @@ public interface LostTraderSession {
      * @param ids storage entry IDs this trader should offer
      */
     void betterLostItems$setMarketSelectionIds(List<UUID> ids);
+
+    /**
+     * @return copy of the trader's original vanilla offers before custom offers were applied
+     */
+    MerchantOffers betterLostItems$getRegularOffers();
+
+    /**
+     * @param offers vanilla wandering-trader offers to restore for the regular trading tab
+     */
+    void betterLostItems$setRegularOffers(MerchantOffers offers);
 }

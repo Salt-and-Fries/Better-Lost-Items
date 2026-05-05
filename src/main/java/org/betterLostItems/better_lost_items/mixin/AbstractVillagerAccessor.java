@@ -11,6 +11,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractVillager.class)
 public interface AbstractVillagerAccessor {
     /**
+     * Reads the target villager's current trade offers.
+     */
+    @Accessor("offers")
+    MerchantOffers betterLostItems$getOffers();
+
+    /**
      * Replaces the target villager's trade offers.
      */
     @Accessor("offers")
