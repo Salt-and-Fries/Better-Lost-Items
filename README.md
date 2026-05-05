@@ -36,7 +36,7 @@ That means random world drops can reappear in trader markets, while items you pe
 - Makes fetching immersive: the trader walks away, despawns, and returns the next morning with the loot.
 - Spawns a nearby wandering trader after a player respawns if none are close enough.
 - Includes admin commands for testing or managing player death-loot caches.
-- Includes Mod Menu integration with an in-game config screen.
+- Includes a NeoForge mod-list config screen.
 - Saves config changes live without needing a game restart.
 
 ## Wandering Trader Market
@@ -86,7 +86,7 @@ Better Lost Items creates a config file:
 config/better_lost_items.json
 ```
 
-If Mod Menu is installed, you can open the config screen in-game and edit everything live.
+You can open the config screen from NeoForge's in-game mod list and edit everything live.
 
 Configurable options include:
 
@@ -100,7 +100,7 @@ Configurable options include:
 - Whether void loot can be recovered.
 - The void-loot fetch item, potion type, and amount.
 
-Changes made through the Mod Menu config screen are saved immediately and take effect without restarting the game.
+Changes made through the config screen are saved immediately and take effect without restarting the game.
 
 ## Commands
 
@@ -122,10 +122,9 @@ These are especially useful for testing the recovery UI.
 
 ## Installation
 
-1. Install Fabric Loader for the supported Minecraft version.
-2. Install Fabric API.
+1. Install NeoForge for Minecraft 1.21.1.
+2. Make sure the profile is using Java 21.
 3. Put the Better Lost Items jar into your `mods` folder.
-4. Optional but recommended: install Mod Menu to edit the config in-game.
 
 The built jar is created with:
 
@@ -136,7 +135,7 @@ The built jar is created with:
 Then use the jar from:
 
 ```text
-build/libs/better-lost-items-1.1.jar
+build/libs/better-lost-items-1.2.jar
 ```
 
 Do not use the `-sources.jar` file unless you are a developer.

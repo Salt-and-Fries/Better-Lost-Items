@@ -15,7 +15,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * @param emeraldOffer amount the old screen offered; historically emerald-specific
  */
 public record PurchaseRecoveryItemsPayload(int traderEntityId, int emeraldOffer) implements CustomPacketPayload {
-    public static final Type<PurchaseRecoveryItemsPayload> TYPE = CustomPacketPayload.createType("purchase_recovery_items");
+    public static final Type<PurchaseRecoveryItemsPayload> TYPE = new Type<>(Better_lost_items.id("purchase_recovery_items"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PurchaseRecoveryItemsPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             PurchaseRecoveryItemsPayload::traderEntityId,
@@ -25,7 +25,7 @@ public record PurchaseRecoveryItemsPayload(int traderEntityId, int emeraldOffer)
     );
 
     /**
-     * @return Fabric custom payload type for this packet
+     * @return custom payload type for this packet
      */
     @Override
     public Type<PurchaseRecoveryItemsPayload> type() {

@@ -1,48 +1,75 @@
 package org.betterLostItems.better_lost_items;
 
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.server.level.ServerPlayer;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import org.betterLostItems.better_lost_items.client.Better_lost_itemsClient;
 
 /**
  * Registers custom payload codecs and serverbound handlers shared by client and server.
  *
- * <p>Handlers hop onto the server thread before touching menus or storage. That keeps packet
- * processing safe even though Fabric receives networking callbacks off the main gameplay path.</p>
+ * <p>NeoForge invokes payload handlers on the main thread by default, so the handlers can touch
+ * menus and storage directly after validating the sending player and current menu state.</p>
  */
 public final class LostItemsNetworking {
     private LostItemsNetworking() {
     }
 
     /**
-     * Registers all common payload types and server receivers.
+     * Registers all payload types and server/client receivers.
      */
-    public static void registerCommon() {
-        PayloadTypeRegistry.playS2C().register(TraderTabStatePayload.TYPE, TraderTabStatePayload.STREAM_CODEC);
-        PayloadTypeRegistry.playS2C().register(RecoveryScreenPayload.TYPE, RecoveryScreenPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(RecoveryScrollPayload.TYPE, RecoveryScrollPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(SwitchTraderTabPayload.TYPE, SwitchTraderTabPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(OpenTraderMarketPayload.TYPE, OpenTraderMarketPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(PurchaseRecoveryItemsPayload.TYPE, PurchaseRecoveryItemsPayload.STREAM_CODEC);
-        PayloadTypeRegistry.playC2S().register(CollectRecoveryItemPayload.TYPE, CollectRecoveryItemPayload.STREAM_CODEC);
-        ServerPlayNetworking.registerGlobalReceiver(RecoveryScrollPayload.TYPE, (payload, context) ->
-                // Scroll packets are accepted only for the exact menu instance currently open.
-                context.player().level().getServer().execute(() -> {
-                    if (context.player().containerMenu instanceof LostItemsRecoveryMenu menu && menu.containerId == payload.containerId()) {
-                        menu.setScrollRows(payload.leftScrollRow(), payload.rightScrollRow());
-                    }
-                })
-        );
-        ServerPlayNetworking.registerGlobalReceiver(SwitchTraderTabPayload.TYPE, (payload, context) ->
-                context.player().level().getServer().execute(() -> LostItemsTradeController.handleTabSwitch(context.player(), payload.recoveryTab()))
-        );
-        ServerPlayNetworking.registerGlobalReceiver(OpenTraderMarketPayload.TYPE, (payload, context) ->
-                context.player().level().getServer().execute(() -> LostItemsTradeController.handleOpenMarket(context.player(), payload.traderEntityId()))
-        );
-        ServerPlayNetworking.registerGlobalReceiver(PurchaseRecoveryItemsPayload.TYPE, (payload, context) ->
-                context.player().level().getServer().execute(() -> LostItemsTradeController.handlePurchaseRecovery(context.player(), payload.traderEntityId(), payload.emeraldOffer()))
-        );
-        ServerPlayNetworking.registerGlobalReceiver(CollectRecoveryItemPayload.TYPE, (payload, context) ->
-                context.player().level().getServer().execute(() -> LostItemsTradeController.handleCollectRecoveryItem(context.player(), payload.traderEntityId(), payload.entryId()))
-        );
+    public static void register(PayloadRegistrar registrar) {
+        registrar.playToClient(TraderTabStatePayload.TYPE, TraderTabStatePayload.STREAM_CODEC, LostItemsNetworking::handleTraderTabState);
+        registrar.playToClient(RecoveryScreenPayload.TYPE, RecoveryScreenPayload.STREAM_CODEC, LostItemsNetworking::handleRecoveryScreen);
+        registrar.playToServer(RecoveryScrollPayload.TYPE, RecoveryScrollPayload.STREAM_CODEC, LostItemsNetworking::handleRecoveryScroll);
+        registrar.playToServer(SwitchTraderTabPayload.TYPE, SwitchTraderTabPayload.STREAM_CODEC, LostItemsNetworking::handleSwitchTraderTab);
+        registrar.playToServer(OpenTraderMarketPayload.TYPE, OpenTraderMarketPayload.STREAM_CODEC, LostItemsNetworking::handleOpenTraderMarket);
+        registrar.playToServer(PurchaseRecoveryItemsPayload.TYPE, PurchaseRecoveryItemsPayload.STREAM_CODEC, LostItemsNetworking::handlePurchaseRecoveryItems);
+        registrar.playToServer(CollectRecoveryItemPayload.TYPE, CollectRecoveryItemPayload.STREAM_CODEC, LostItemsNetworking::handleCollectRecoveryItem);
+    }
+
+    private static void handleTraderTabState(TraderTabStatePayload payload, IPayloadContext context) {
+        if (FMLEnvironment.dist.isClient()) {
+            Better_lost_itemsClient.handleTraderTabState(payload);
+        }
+    }
+
+    private static void handleRecoveryScreen(RecoveryScreenPayload payload, IPayloadContext context) {
+        if (FMLEnvironment.dist.isClient()) {
+            Better_lost_itemsClient.handleRecoveryScreen(payload);
+        }
+    }
+
+    private static void handleRecoveryScroll(RecoveryScrollPayload payload, IPayloadContext context) {
+        if (context.player() instanceof ServerPlayer player
+                && player.containerMenu instanceof LostItemsRecoveryMenu menu
+                && menu.containerId == payload.containerId()) {
+            menu.setScrollRows(payload.leftScrollRow(), payload.rightScrollRow());
+        }
+    }
+
+    private static void handleSwitchTraderTab(SwitchTraderTabPayload payload, IPayloadContext context) {
+        if (context.player() instanceof ServerPlayer player) {
+            LostItemsTradeController.handleTabSwitch(player, payload.recoveryTab());
+        }
+    }
+
+    private static void handleOpenTraderMarket(OpenTraderMarketPayload payload, IPayloadContext context) {
+        if (context.player() instanceof ServerPlayer player) {
+            LostItemsTradeController.handleOpenMarket(player, payload.traderEntityId());
+        }
+    }
+
+    private static void handlePurchaseRecoveryItems(PurchaseRecoveryItemsPayload payload, IPayloadContext context) {
+        if (context.player() instanceof ServerPlayer player) {
+            LostItemsTradeController.handlePurchaseRecovery(player, payload.traderEntityId(), payload.emeraldOffer());
+        }
+    }
+
+    private static void handleCollectRecoveryItem(CollectRecoveryItemPayload payload, IPayloadContext context) {
+        if (context.player() instanceof ServerPlayer player) {
+            LostItemsTradeController.handleCollectRecoveryItem(player, payload.traderEntityId(), payload.entryId());
+        }
     }
 }

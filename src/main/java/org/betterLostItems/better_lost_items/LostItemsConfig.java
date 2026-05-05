@@ -3,7 +3,6 @@ package org.betterLostItems.better_lost_items;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,6 +13,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
+import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * Loads and exposes the server/client configuration for Better Lost Items.
  *
- * <p>The config is stored in Fabric's shared config directory as
+ * <p>The config is stored in NeoForge's shared config directory as
  * {@code better_lost_items.json}. Both logical sides read the same file in
  * development/singleplayer, so this class owns not only gameplay rules but also
  * UI layout choices such as which recovery texture and fetch-slot positions to use.</p>
@@ -317,10 +317,10 @@ public final class LostItemsConfig {
     }
 
     /**
-     * @return path to the config file in Fabric's shared config directory
+     * @return path to the config file in NeoForge's shared config directory
      */
     private static Path configPath() {
-        return FabricLoader.getInstance().getConfigDir().resolve(CONFIG_FILE_NAME);
+        return FMLPaths.CONFIGDIR.get().resolve(CONFIG_FILE_NAME);
     }
 
     /**

@@ -1,30 +1,58 @@
 package org.betterLostItems.better_lost_items.client;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.Minecraft;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.betterLostItems.better_lost_items.Better_lost_items;
 import org.betterLostItems.better_lost_items.RecoveryScreenPayload;
 import org.betterLostItems.better_lost_items.TraderTabStatePayload;
 
 /**
- * Client-only Fabric entry point for Better Lost Items.
+ * Client-only NeoForge hooks for Better Lost Items.
  */
-public class Better_lost_itemsClient implements ClientModInitializer {
+public final class Better_lost_itemsClient {
+    private Better_lost_itemsClient() {
+    }
 
     /**
-     * Registers the recovery menu screen and clientbound packet handlers.
+     * Registers the config screen hook used by NeoForge's mod list.
      */
-    @Override
-    public void onInitializeClient() {
-        MenuScreens.register(Better_lost_items.LOST_ITEMS_RECOVERY_MENU, LostItemsRecoveryMenuScreen::new);
-        ClientPlayNetworking.registerGlobalReceiver(TraderTabStatePayload.TYPE, (payload, context) ->
-                context.client().execute(() -> LostItemsClientState.apply(payload))
-        );
-        ClientPlayNetworking.registerGlobalReceiver(RecoveryScreenPayload.TYPE, (payload, context) ->
-                context.client().execute(() -> LostItemsClientState.openOrRefreshRecovery(payload))
-        );
-        ClientTickEvents.END_CLIENT_TICK.register(client -> LostItemsClientState.tick(client));
+    public static void registerModEventListeners(IEventBus modEventBus, ModContainer modContainer) {
+        modEventBus.addListener(Better_lost_itemsClient::registerScreens);
+        modContainer.registerExtensionPoint(IConfigScreenFactory.class, (minecraft, parent) -> new BetterLostItemsConfigScreen(parent));
+    }
+
+    /**
+     * Handles trader tab state payloads on the client.
+     */
+    public static void handleTraderTabState(TraderTabStatePayload payload) {
+        Minecraft.getInstance().execute(() -> LostItemsClientState.apply(payload));
+    }
+
+    /**
+     * Handles legacy recovery screen payloads on the client.
+     */
+    public static void handleRecoveryScreen(RecoveryScreenPayload payload) {
+        Minecraft.getInstance().execute(() -> LostItemsClientState.openOrRefreshRecovery(payload));
+    }
+
+    private static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(Better_lost_items.LOST_ITEMS_RECOVERY_MENU.get(), LostItemsRecoveryMenuScreen::new);
+    }
+
+    @EventBusSubscriber(modid = Better_lost_items.MOD_ID, value = net.neoforged.api.distmarker.Dist.CLIENT)
+    public static final class GameEvents {
+        private GameEvents() {
+        }
+
+        @SubscribeEvent
+        public static void onClientTick(ClientTickEvent.Post event) {
+            LostItemsClientState.tick(Minecraft.getInstance());
+        }
     }
 }

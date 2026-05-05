@@ -1,6 +1,5 @@
 package org.betterLostItems.better_lost_items.client;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -10,6 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.betterLostItems.better_lost_items.CollectRecoveryItemPayload;
 import org.betterLostItems.better_lost_items.OpenTraderMarketPayload;
 import org.betterLostItems.better_lost_items.RecoveryScreenPayload;
@@ -92,7 +92,7 @@ public final class LostItemsRecoveryScreen extends Screen {
                 Component.literal("Market"),
                 Component.literal("Market (" + this.state.marketCount() + ")"),
                 false,
-                button -> ClientPlayNetworking.send(new OpenTraderMarketPayload(this.state.traderEntityId()))
+                button -> PacketDistributor.sendToServer(new OpenTraderMarketPayload(this.state.traderEntityId()))
         ));
         this.marketTab.active = this.state.marketCount() > 0;
 
@@ -114,7 +114,7 @@ public final class LostItemsRecoveryScreen extends Screen {
         this.emeraldInput.setResponder(value -> this.updatePurchaseButton());
 
         this.purchaseButton = this.addRenderableWidget(Button.builder(Component.literal("Buy All"), button ->
-                        ClientPlayNetworking.send(new PurchaseRecoveryItemsPayload(this.state.traderEntityId(), parseEmeraldOffer())))
+                        PacketDistributor.sendToServer(new PurchaseRecoveryItemsPayload(this.state.traderEntityId(), parseEmeraldOffer())))
                 .bounds(this.originX + 152, this.originY + 124, 68, 20)
                 .build());
 
@@ -145,7 +145,7 @@ public final class LostItemsRecoveryScreen extends Screen {
 
         LostItemEntry clickedPurchasedItem = entryAt(this.state.purchasedItems(), rightGridX(), gridY(), this.rightScrollRow, mouseX, mouseY);
         if (clickedPurchasedItem != null) {
-            ClientPlayNetworking.send(new CollectRecoveryItemPayload(this.state.traderEntityId(), clickedPurchasedItem.id()));
+            PacketDistributor.sendToServer(new CollectRecoveryItemPayload(this.state.traderEntityId(), clickedPurchasedItem.id()));
             return true;
         }
 

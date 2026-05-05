@@ -1,6 +1,5 @@
 package org.betterLostItems.better_lost_items;
 
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
@@ -13,6 +12,7 @@ import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.betterLostItems.better_lost_items.mixin.AbstractVillagerAccessor;
 import org.betterLostItems.better_lost_items.mixin.MerchantMenuAccessor;
 
@@ -91,7 +91,7 @@ public final class LostItemsTradeController {
 
         LostItemsStorage storage = LostItemsStorageManager.get(player.level().getServer());
         List<LostItemEntry> marketEntries = getLockedMarketEntries(trader, storage);
-        ServerPlayNetworking.send(player, new TraderTabStatePayload(
+        PacketDistributor.sendToPlayer(player, new TraderTabStatePayload(
                 menu.containerId,
                 false,
                 marketEntries.size(),
@@ -262,7 +262,7 @@ public final class LostItemsTradeController {
         applyOffers(trader, offers, LostOfferKind.MARKET);
         resetMenu(menu, offers);
         player.sendMerchantOffers(menu.containerId, offers, 1, trader.getVillagerXp(), trader.showProgressBar(), trader.canRestock());
-        ServerPlayNetworking.send(player, new TraderTabStatePayload(
+        PacketDistributor.sendToPlayer(player, new TraderTabStatePayload(
                 menu.containerId,
                 false,
                 marketEntries.size(),
@@ -282,7 +282,7 @@ public final class LostItemsTradeController {
         trader.openTradingScreen(player, trader.getDisplayName(), 1);
         sendCurrentTabState(player, trader);
         if (player.containerMenu instanceof MerchantMenu menu) {
-            ServerPlayNetworking.send(player, new TraderTabStatePayload(
+            PacketDistributor.sendToPlayer(player, new TraderTabStatePayload(
                     menu.containerId,
                     false,
                     marketEntries.size(),
@@ -304,7 +304,7 @@ public final class LostItemsTradeController {
         trader.setTradingPlayer(player);
         trader.openTradingScreen(player, trader.getDisplayName(), 1);
         if (player.containerMenu instanceof MerchantMenu menu) {
-            ServerPlayNetworking.send(player, new TraderTabStatePayload(
+            PacketDistributor.sendToPlayer(player, new TraderTabStatePayload(
                     menu.containerId,
                     false,
                     0,

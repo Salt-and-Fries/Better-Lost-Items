@@ -1,10 +1,10 @@
 package org.betterLostItems.better_lost_items.mixin.client;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.betterLostItems.better_lost_items.SwitchTraderTabPayload;
 import org.betterLostItems.better_lost_items.TraderTabStatePayload;
 import org.betterLostItems.better_lost_items.client.LostItemsClientState;
@@ -118,7 +118,7 @@ public abstract class MerchantScreenMixin implements LostItemsMerchantScreenBrid
                     Component.literal("Recovery"),
                     Component.literal("Recovery"),
                     false,
-                    button -> ClientPlayNetworking.send(new SwitchTraderTabPayload(screen.getMenu().containerId, true))
+                    button -> PacketDistributor.sendToServer(new SwitchTraderTabPayload(screen.getMenu().containerId, true))
             ));
         }
     }
