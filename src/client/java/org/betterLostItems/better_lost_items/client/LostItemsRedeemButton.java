@@ -1,7 +1,7 @@
 package org.betterLostItems.better_lost_items.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -77,7 +77,7 @@ public final class LostItemsRedeemButton extends AbstractWidget {
      * Draws the custom state texture, confirm overlay, and hover tooltip.
      */
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Identifier texture = this.currentTexture();
         boolean hasCustomTexture = Minecraft.getInstance().getResourceManager().getResource(texture).isPresent();
         if (hasCustomTexture) {
@@ -96,7 +96,7 @@ public final class LostItemsRedeemButton extends AbstractWidget {
         } else {
             int fillColor = !this.active ? 0xFF5A5A5A : (this.pressed ? 0xFF707070 : (this.isHoveredOrFocused() ? 0xFFA0A0A0 : 0xFF8B8B8B));
             graphics.fill(this.getX(), this.getY(), this.getRight(), this.getBottom(), fillColor);
-            graphics.outline(this.getX(), this.getY(), this.width, this.height, 0xFF1F1F1F);
+            graphics.renderOutline(this.getX(), this.getY(), this.width, this.height, 0xFF1F1F1F);
         }
 
         if (Minecraft.getInstance().getResourceManager().getResource(CONFIRM_TEXTURE).isPresent()) {

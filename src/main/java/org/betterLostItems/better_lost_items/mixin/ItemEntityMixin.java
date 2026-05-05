@@ -206,16 +206,16 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
         }
 
         ChunkPos currentChunk = itemEntity.chunkPosition();
-        long currentChunkLong = currentChunk.pack();
+        long currentChunkLong = currentChunk.toLong();
         if (this.betterLostItems$hasTrackedChunk && this.betterLostItems$trackedChunkLong == currentChunkLong) {
             return;
         }
 
         if (this.betterLostItems$hasTrackedChunk) {
-            this.betterLostItems$untrackChunkIfEmpty(serverLevel, ChunkPos.unpack(this.betterLostItems$trackedChunkLong), itemEntity.getId());
+            this.betterLostItems$untrackChunkIfEmpty(serverLevel, new ChunkPos(this.betterLostItems$trackedChunkLong), itemEntity.getId());
         }
 
-        LostItemsStorageManager.get(serverLevel.getServer()).addTrackedDeathChunk(this.betterLostItems$ownerId, serverLevel.dimension(), currentChunk.x(), currentChunk.z());
+        LostItemsStorageManager.get(serverLevel.getServer()).addTrackedDeathChunk(this.betterLostItems$ownerId, serverLevel.dimension(), currentChunk.x, currentChunk.z);
         this.betterLostItems$trackedChunkLong = currentChunkLong;
         this.betterLostItems$hasTrackedChunk = true;
     }

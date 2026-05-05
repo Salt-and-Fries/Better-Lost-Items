@@ -219,7 +219,7 @@ public final class LostItemsTraderJourneyManager {
      */
     private static void tickFetchReturns(MinecraftServer server) {
         LostItemsStorage storage = LostItemsStorageManager.get(server);
-        long currentGameTime = server.overworld().getOverworldClockTime();
+        long currentGameTime = server.overworld().getDayTime();
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             UUID playerId = player.getUUID();
             long returnGameTime = storage.getFetchReturnGameTime(playerId);
@@ -378,7 +378,7 @@ public final class LostItemsTraderJourneyManager {
      * @return overworld clock time at the start of the next Minecraft day
      */
     private static long nextMorningGameTime(MinecraftServer server) {
-        long dayTime = server.overworld().getOverworldClockTime();
+        long dayTime = server.overworld().getDayTime();
         return ((dayTime / DAY_LENGTH) + 1L) * DAY_LENGTH;
     }
 

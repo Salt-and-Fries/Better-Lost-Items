@@ -1,7 +1,7 @@
 package org.betterLostItems.better_lost_items.client;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -82,12 +82,12 @@ public final class LostItemsTabButton extends AbstractWidget {
      * Draws the tab sprite, icon, disabled overlay, and tooltip.
      */
     @Override
-    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+    protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         Identifier sprite = this.leftTab
                 ? (this.selected ? LEFT_SELECTED : LEFT_UNSELECTED)
                 : (this.selected ? RIGHT_SELECTED : RIGHT_UNSELECTED);
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, this.getX(), this.getY(), this.width, this.height);
-        graphics.item(this.icon, this.getX() + 5, this.getY() + 8);
+        graphics.renderItem(this.icon, this.getX() + 5, this.getY() + 8);
 
         if (!this.active && !this.selected) {
             graphics.fill(this.getX() + 2, this.getY() + 5, this.getRight() - 2, this.getBottom() - 2, 0x66000000);

@@ -32,7 +32,7 @@ public record TrackedDeathChunk(ResourceKey<Level> dimension, int chunkX, int ch
      * @return dimension-aware tracked chunk
      */
     public static TrackedDeathChunk of(ResourceKey<Level> dimension, ChunkPos chunkPos) {
-        return new TrackedDeathChunk(dimension, chunkPos.x(), chunkPos.z());
+        return new TrackedDeathChunk(dimension, chunkPos.x, chunkPos.z);
     }
 
     /**
@@ -46,7 +46,7 @@ public record TrackedDeathChunk(ResourceKey<Level> dimension, int chunkX, int ch
      * @return packed chunk coordinate used by entity-loaded checks
      */
     public long toLong() {
-        return ChunkPos.pack(this.chunkX, this.chunkZ);
+        return ChunkPos.asLong(this.chunkX, this.chunkZ);
     }
 
     /**

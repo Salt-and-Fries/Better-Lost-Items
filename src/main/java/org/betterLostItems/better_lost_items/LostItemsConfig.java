@@ -359,20 +359,20 @@ public final class LostItemsConfig {
     /**
      * Resolves a configured potion ID for potion-based custom requirements.
      */
-    private static Holder.Reference<Potion> resolvePotion(String potionId, Holder.Reference<Potion> fallback) {
+    private static Holder<Potion> resolvePotion(String potionId, Holder<Potion> fallback) {
         if (potionId == null || potionId.isBlank()) {
-            Better_lost_items.LOGGER.warn("Blank Better Lost Items config potion, falling back to {}", fallback.key().identifier());
+            Better_lost_items.LOGGER.warn("Blank Better Lost Items config potion, falling back to {}", fallback.getRegisteredName());
             return fallback;
         }
 
         Identifier identifier = Identifier.tryParse(potionId);
         if (identifier == null) {
-            Better_lost_items.LOGGER.warn("Invalid Better Lost Items config potion '{}', falling back to {}", potionId, fallback.key().identifier());
+            Better_lost_items.LOGGER.warn("Invalid Better Lost Items config potion '{}', falling back to {}", potionId, fallback.getRegisteredName());
             return fallback;
         }
 
-        return BuiltInRegistries.POTION.get(identifier).orElseGet(() -> {
-            Better_lost_items.LOGGER.warn("Unknown Better Lost Items config potion '{}', falling back to {}", potionId, fallback.key().identifier());
+        return BuiltInRegistries.POTION.get(identifier).<Holder<Potion>>map(reference -> reference).orElseGet(() -> {
+            Better_lost_items.LOGGER.warn("Unknown Better Lost Items config potion '{}', falling back to {}", potionId, fallback.getRegisteredName());
             return fallback;
         });
     }
@@ -380,7 +380,7 @@ public final class LostItemsConfig {
     /**
      * Builds the display-only stack used by ghost slot rendering.
      */
-    private static ItemStack ghostStack(Item item, Holder.Reference<Potion> potion) {
+    private static ItemStack ghostStack(Item item, Holder<Potion> potion) {
         if (isPotionItem(item)) {
             return PotionContents.createItemStack(item, potion);
         }
@@ -391,7 +391,7 @@ public final class LostItemsConfig {
     /**
      * Checks configured item identity, including potion contents for potion items.
      */
-    private static boolean matchesConfiguredItem(ItemStack stack, Item item, Holder.Reference<Potion> potion) {
+    private static boolean matchesConfiguredItem(ItemStack stack, Item item, Holder<Potion> potion) {
         if (!stack.is(item)) {
             return false;
         }

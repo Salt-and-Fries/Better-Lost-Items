@@ -2,7 +2,7 @@ package org.betterLostItems.better_lost_items.client;
 
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -126,12 +126,12 @@ public final class LostItemsRecoveryScreen extends Screen {
      * Draws the full custom legacy screen.
      */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        this.extractTransparentBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderTransparentBackground(graphics);
         renderWindow(graphics);
         renderGrid(graphics, this.state.lostItems(), leftGridX(), gridY(), this.leftScrollRow, false, mouseX, mouseY);
         renderGrid(graphics, this.state.purchasedItems(), rightGridX(), gridY(), this.rightScrollRow, true, mouseX, mouseY);
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, delta);
         renderLabels(graphics);
     }
 
@@ -174,18 +174,18 @@ public final class LostItemsRecoveryScreen extends Screen {
     /**
      * Draws the old panel-style background and slot grid.
      */
-    private void renderWindow(GuiGraphicsExtractor graphics) {
+    private void renderWindow(GuiGraphics graphics) {
         graphics.fill(this.originX, this.originY, this.originX + WINDOW_WIDTH, this.originY + WINDOW_HEIGHT, 0xF0202028);
-        graphics.outline(this.originX, this.originY, WINDOW_WIDTH, WINDOW_HEIGHT, 0xFF8B8B8B);
+        graphics.renderOutline(this.originX, this.originY, WINDOW_WIDTH, WINDOW_HEIGHT, 0xFF8B8B8B);
 
         graphics.fill(this.originX + 12, this.originY + 24, this.originX + 12 + PANEL_WIDTH, this.originY + 24 + PANEL_HEIGHT, 0xCC101014);
-        graphics.outline(this.originX + 12, this.originY + 24, PANEL_WIDTH, PANEL_HEIGHT, 0xFF5C5C5C);
+        graphics.renderOutline(this.originX + 12, this.originY + 24, PANEL_WIDTH, PANEL_HEIGHT, 0xFF5C5C5C);
 
         graphics.fill(this.originX + WINDOW_WIDTH - 12 - PANEL_WIDTH, this.originY + 24, this.originX + WINDOW_WIDTH - 12, this.originY + 24 + PANEL_HEIGHT, 0xCC101014);
-        graphics.outline(this.originX + WINDOW_WIDTH - 12 - PANEL_WIDTH, this.originY + 24, PANEL_WIDTH, PANEL_HEIGHT, 0xFF5C5C5C);
+        graphics.renderOutline(this.originX + WINDOW_WIDTH - 12 - PANEL_WIDTH, this.originY + 24, PANEL_WIDTH, PANEL_HEIGHT, 0xFF5C5C5C);
 
         graphics.fill(this.originX + 154, this.originY + 42, this.originX + 218, this.originY + 152, 0x99202024);
-        graphics.outline(this.originX + 154, this.originY + 42, 64, 110, 0xFF6D6D6D);
+        graphics.renderOutline(this.originX + 154, this.originY + 42, 64, 110, 0xFF6D6D6D);
 
         drawSlotGrid(graphics, leftGridX(), gridY());
         drawSlotGrid(graphics, rightGridX(), gridY());
@@ -194,25 +194,25 @@ public final class LostItemsRecoveryScreen extends Screen {
     /**
      * Draws labels for the old panel-style screen.
      */
-    private void renderLabels(GuiGraphicsExtractor graphics) {
-        graphics.text(this.font, this.title, this.originX + 14, this.originY + 10, 0xFFFFFF);
-        graphics.text(this.font, Component.literal("Lost Items"), this.originX + 18, this.originY + 30, 0xE0E0E0);
-        graphics.text(this.font, Component.literal(this.state.lostItems().size() + " stacks"), this.originX + 86, this.originY + 30, 0xB0B0B0);
-        graphics.text(this.font, Component.literal("Purchased"), this.originX + WINDOW_WIDTH - PANEL_WIDTH + 14, this.originY + 30, 0xE0E0E0);
-        graphics.text(this.font, Component.literal(this.state.purchasedItems().size() + " stacks"), this.originX + WINDOW_WIDTH - PANEL_WIDTH + 84, this.originY + 30, 0xB0B0B0);
+    private void renderLabels(GuiGraphics graphics) {
+        graphics.drawString(this.font, this.title, this.originX + 14, this.originY + 10, 0xFFFFFF);
+        graphics.drawString(this.font, Component.literal("Lost Items"), this.originX + 18, this.originY + 30, 0xE0E0E0);
+        graphics.drawString(this.font, Component.literal(this.state.lostItems().size() + " stacks"), this.originX + 86, this.originY + 30, 0xB0B0B0);
+        graphics.drawString(this.font, Component.literal("Purchased"), this.originX + WINDOW_WIDTH - PANEL_WIDTH + 14, this.originY + 30, 0xE0E0E0);
+        graphics.drawString(this.font, Component.literal(this.state.purchasedItems().size() + " stacks"), this.originX + WINDOW_WIDTH - PANEL_WIDTH + 84, this.originY + 30, 0xB0B0B0);
 
-        graphics.centeredText(this.font, Component.literal("Recovery"), this.originX + 186, this.originY + 50, 0xFFFFFF);
-        graphics.centeredText(this.font, Component.literal("10 emeralds"), this.originX + 186, this.originY + 66, 0x55FF55);
-        graphics.centeredText(this.font, Component.literal("buys every lost item"), this.originX + 186, this.originY + 78, 0xC8C8C8);
-        graphics.centeredText(this.font, Component.literal("Type 10 below"), this.originX + 186, this.originY + 92, 0x9E9E9E);
-        graphics.centeredText(this.font, Component.literal("Scroll a column"), this.originX + 186, this.originY + 162, 0xB0B0B0);
-        graphics.centeredText(this.font, Component.literal("Click items on the right"), this.originX + 186, this.originY + 174, 0xB0B0B0);
+        graphics.drawCenteredString(this.font, Component.literal("Recovery"), this.originX + 186, this.originY + 50, 0xFFFFFF);
+        graphics.drawCenteredString(this.font, Component.literal("10 emeralds"), this.originX + 186, this.originY + 66, 0x55FF55);
+        graphics.drawCenteredString(this.font, Component.literal("buys every lost item"), this.originX + 186, this.originY + 78, 0xC8C8C8);
+        graphics.drawCenteredString(this.font, Component.literal("Type 10 below"), this.originX + 186, this.originY + 92, 0x9E9E9E);
+        graphics.drawCenteredString(this.font, Component.literal("Scroll a column"), this.originX + 186, this.originY + 162, 0xB0B0B0);
+        graphics.drawCenteredString(this.font, Component.literal("Click items on the right"), this.originX + 186, this.originY + 174, 0xB0B0B0);
     }
 
     /**
      * Draws one scrollable grid of legacy recovery entries.
      */
-    private void renderGrid(GuiGraphicsExtractor graphics, List<LostItemEntry> entries, int gridX, int gridY, int scrollRow, boolean purchased, int mouseX, int mouseY) {
+    private void renderGrid(GuiGraphics graphics, List<LostItemEntry> entries, int gridX, int gridY, int scrollRow, boolean purchased, int mouseX, int mouseY) {
         int startIndex = scrollRow * GRID_COLUMNS;
         int endIndex = Math.min(entries.size(), startIndex + GRID_SLOTS);
         for (int index = startIndex; index < endIndex; index++) {
@@ -220,30 +220,30 @@ public final class LostItemsRecoveryScreen extends Screen {
             int localIndex = index - startIndex;
             int x = gridX + (localIndex % GRID_COLUMNS) * SLOT_SIZE + 1;
             int y = gridY + (localIndex / GRID_COLUMNS) * SLOT_SIZE + 1;
-            graphics.item(entry.stack(), x, y);
-            graphics.itemDecorations(this.font, entry.stack(), x, y);
+            graphics.renderItem(entry.stack(), x, y);
+            graphics.renderItemDecorations(this.font, entry.stack(), x, y);
 
             if (mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 16) {
-                graphics.outline(x - 1, y - 1, 18, 18, purchased ? 0xFF7BC07B : 0xFFBFBF7B);
+                graphics.renderOutline(x - 1, y - 1, 18, 18, purchased ? 0xFF7BC07B : 0xFFBFBF7B);
                 graphics.setTooltipForNextFrame(this.font, entry.stack(), mouseX, mouseY);
             }
         }
 
         if (entries.isEmpty()) {
-            graphics.centeredText(this.font, purchased ? Component.literal("Nothing purchased yet") : Component.literal("No lost items waiting"), gridX + 63, gridY + 38, 0x8F8F8F);
+            graphics.drawCenteredString(this.font, purchased ? Component.literal("Nothing purchased yet") : Component.literal("No lost items waiting"), gridX + 63, gridY + 38, 0x8F8F8F);
         }
     }
 
     /**
      * Draws placeholder slot boxes for the legacy screen.
      */
-    private void drawSlotGrid(GuiGraphicsExtractor graphics, int gridX, int gridY) {
+    private void drawSlotGrid(GuiGraphics graphics, int gridX, int gridY) {
         for (int row = 0; row < GRID_ROWS; row++) {
             for (int column = 0; column < GRID_COLUMNS; column++) {
                 int x = gridX + column * SLOT_SIZE;
                 int y = gridY + row * SLOT_SIZE;
                 graphics.fill(x, y, x + SLOT_SIZE, y + SLOT_SIZE, 0x66101010);
-                graphics.outline(x, y, SLOT_SIZE, SLOT_SIZE, 0xFF363636);
+                graphics.renderOutline(x, y, SLOT_SIZE, SLOT_SIZE, 0xFF363636);
             }
         }
     }

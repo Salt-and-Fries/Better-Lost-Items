@@ -1,6 +1,6 @@
 package org.betterLostItems.better_lost_items.client;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
@@ -161,12 +161,12 @@ public final class BetterLostItemsConfigScreen extends Screen {
      * Draws a dark, vanilla-options style screen with a scrollable option list.
      */
     @Override
-    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        this.extractTransparentBackground(graphics);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.renderTransparentBackground(graphics);
         graphics.fill(RenderPipelines.GUI, 0, 0, this.width, this.height, 0xB0000000);
         graphics.fill(RenderPipelines.GUI, 0, 0, this.width, LIST_TOP - 8, 0xA0000000);
         graphics.fill(RenderPipelines.GUI, 0, this.listBottom(), this.width, this.height, 0xC0000000);
-        graphics.centeredText(this.font, this.title, this.width / 2, 16, TITLE_COLOR);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 16, TITLE_COLOR);
 
         for (Label label : this.labels) {
             int y = this.scrolledY(label.baseY());
@@ -175,14 +175,14 @@ public final class BetterLostItemsConfigScreen extends Screen {
             }
 
             int color = label.section() ? SECTION_COLOR : (label.active().getAsBoolean() ? LABEL_COLOR : DISABLED_LABEL_COLOR);
-            graphics.text(this.font, Component.literal(label.text()), this.listLeft, y, color, true);
+            graphics.drawString(this.font, Component.literal(label.text()), this.listLeft, y, color, true);
         }
 
         this.drawScrollbar(graphics);
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        super.render(graphics, mouseX, mouseY, delta);
         this.drawOptionTooltip(graphics, mouseX, mouseY);
         int statusColor = this.hasValidationError ? ERROR_COLOR : SUCCESS_COLOR;
-        graphics.centeredText(this.font, Component.literal(this.statusMessage), this.width / 2, this.height - 46, statusColor);
+        graphics.drawCenteredString(this.font, Component.literal(this.statusMessage), this.width / 2, this.height - 46, statusColor);
     }
 
     /**
@@ -496,7 +496,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
     /**
      * Draws a small vanilla-style scrollbar when the list is taller than the viewport.
      */
-    private void drawScrollbar(GuiGraphicsExtractor graphics) {
+    private void drawScrollbar(GuiGraphics graphics) {
         int maxScroll = this.maxScrollOffset();
         if (maxScroll <= 0) {
             return;
@@ -515,7 +515,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
     /**
      * Draws the hovered option's tooltip.
      */
-    private void drawOptionTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void drawOptionTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         for (Label label : this.labels) {
             if (label.tooltip() == null || label.tooltip().isBlank()) {
                 continue;

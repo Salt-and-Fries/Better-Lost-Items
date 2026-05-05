@@ -2,7 +2,7 @@ package org.betterLostItems.better_lost_items.client;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -61,7 +61,9 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
      * Creates the recovery screen for a synced recovery menu.
      */
     public LostItemsRecoveryMenuScreen(LostItemsRecoveryMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, LostItemsRecoveryMenu.IMAGE_WIDTH, LostItemsRecoveryMenu.IMAGE_HEIGHT);
+        super(menu, inventory, title);
+        this.imageWidth = LostItemsRecoveryMenu.IMAGE_WIDTH;
+        this.imageHeight = LostItemsRecoveryMenu.IMAGE_HEIGHT;
         this.titleLabelX = 0;
         this.titleLabelY = -1000;
         this.inventoryLabelX = LostItemsRecoveryMenu.PLAYER_INV_X - 1;
@@ -139,8 +141,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
      * Draws the background texture, ghost slot items, fetch badges, and scroll bars.
      */
     @Override
-    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        this.extractTransparentBackground(graphics);
+    protected void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
         graphics.blit(
                 RenderPipelines.GUI_TEXTURED,
                 this.backgroundTexture(),
@@ -182,8 +183,8 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
      * Draws section labels using the vanilla inventory label style.
      */
     @Override
-    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractLabels(graphics, mouseX, mouseY);
+    protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderLabels(graphics, mouseX, mouseY);
         this.drawCenteredLabel(graphics, Component.literal("Lost Loot"), LostItemsRecoveryMenu.LEFT_GRID_X + ((LostItemsRecoveryMenu.GRID_COLUMNS * SLOT_SIZE) / 2), SECTION_LABEL_Y);
         this.drawCenteredLabel(graphics, Component.literal("Retrieved Loot"), LostItemsRecoveryMenu.RIGHT_GRID_X + ((LostItemsRecoveryMenu.GRID_COLUMNS * SLOT_SIZE) / 2), SECTION_LABEL_Y);
         this.drawCenteredLabel(graphics, Component.literal("Costs:"), COST_LABEL_X, COST_LABEL_Y);
@@ -210,8 +211,8 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
      * Adds fetch-badge tooltips after vanilla item/tooltips have had a chance to render.
      */
     @Override
-    protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
-        super.extractTooltip(graphics, mouseX, mouseY);
+    protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+        super.renderTooltip(graphics, mouseX, mouseY);
         this.setFetchBadgeTooltip(graphics, mouseX, mouseY);
         this.setFetchButtonTooltip(graphics, mouseX, mouseY);
     }
@@ -423,9 +424,9 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Draws centered, no-shadow vanilla-gray UI text.
      */
-    private void drawCenteredLabel(GuiGraphicsExtractor graphics, Component text, int centerX, int y) {
+    private void drawCenteredLabel(GuiGraphics graphics, Component text, int centerX, int y) {
         int textX = centerX - (this.font.width(text.getVisualOrderText()) / 2);
-        graphics.text(this.font, text, textX, y, 0xFF404040, false);
+        graphics.drawString(this.font, text, textX, y, 0xFF404040, false);
     }
 
     /**
@@ -438,7 +439,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Draws transparent item hints in empty input slots.
      */
-    private void drawGhostItems(GuiGraphicsExtractor graphics) {
+    private void drawGhostItems(GuiGraphics graphics) {
         this.drawGhostItem(
                 graphics,
                 LostItemsConfig.deathLootPaymentStack(),
@@ -483,7 +484,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Draws one ghost item and overlays a translucent wash so it reads as a placeholder.
      */
-    private void drawGhostItem(GuiGraphicsExtractor graphics, ItemStack stack, int slotX, int slotY, boolean slotIsEmpty) {
+    private void drawGhostItem(GuiGraphics graphics, ItemStack stack, int slotX, int slotY, boolean slotIsEmpty) {
         if (!slotIsEmpty || stack.isEmpty() || slotX < 0) {
             return;
         }
@@ -491,15 +492,15 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
         int x = this.leftPos + slotX;
         int y = this.topPos + slotY;
         ItemStack ghostStack = stack.copy();
-        graphics.fakeItem(ghostStack, x, y);
-        graphics.itemDecorations(this.font, ghostStack, x, y);
+        graphics.renderFakeItem(ghostStack, x, y);
+        graphics.renderItemDecorations(this.font, ghostStack, x, y);
         graphics.fill(RenderPipelines.GUI, x, y, x + 16, y + 16, GHOST_ITEM_OVERLAY_COLOR);
     }
 
     /**
      * Draws complete/incomplete markers above enabled fetch supply slots.
      */
-    private void drawFetchStatusBadges(GuiGraphicsExtractor graphics) {
+    private void drawFetchStatusBadges(GuiGraphics graphics) {
         if (!LostItemsConfig.isFetchEnabled()) {
             return;
         }
@@ -518,7 +519,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Draws one status badge for a fetch supply slot.
      */
-    private void drawFetchStatusBadge(GuiGraphicsExtractor graphics, int slotX, boolean complete) {
+    private void drawFetchStatusBadge(GuiGraphics graphics, int slotX, boolean complete) {
         if (slotX < 0) {
             return;
         }
@@ -541,7 +542,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Shows the correct dynamic tooltip when hovering a fetch status badge.
      */
-    private void setFetchBadgeTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void setFetchBadgeTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (!LostItemsConfig.isFetchEnabled()) {
             return;
         }
@@ -564,7 +565,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Explains why the Fetch button is disabled when the supplies look correct.
      */
-    private void setFetchButtonTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+    private void setFetchButtonTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.fetchButton == null || !this.fetchButton.visible || !this.isHoveringFetchButton(mouseX, mouseY)) {
             return;
         }
@@ -731,7 +732,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     /**
      * Draws a vanilla villager-style scrollbar and requests a matching cursor while hovered.
      */
-    private void drawScrollBar(GuiGraphicsExtractor graphics, int x, int y, int scrollRow, int maxScrollRow, boolean hovered, boolean dragging) {
+    private void drawScrollBar(GuiGraphics graphics, int x, int y, int scrollRow, int maxScrollRow, boolean hovered, boolean dragging) {
         Identifier sprite = maxScrollRow > 0 ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, sprite, x, this.thumbY(y, scrollRow, maxScrollRow), SCROLLBAR_WIDTH, SCROLLER_HEIGHT);
 

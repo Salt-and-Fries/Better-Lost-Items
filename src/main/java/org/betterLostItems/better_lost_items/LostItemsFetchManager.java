@@ -163,8 +163,8 @@ public final class LostItemsFetchManager {
                     "[BLI DEBUG] Fetch starting player={} dimension={} chunk={},{} remainingAfterStart={}",
                     this.playerId,
                     this.activeChunk.dimension().identifier(),
-                    chunkPos.x(),
-                    chunkPos.z(),
+                    chunkPos.x,
+                    chunkPos.z,
                     this.pendingChunks.size()
             );
             level.getChunkSource().addTicketWithRadius(FETCH_TICKET_TYPE, chunkPos, FETCH_TICKET_RADIUS);
@@ -208,8 +208,8 @@ public final class LostItemsFetchManager {
                     "[BLI DEBUG] Fetch scanned player={} dimension={} chunk={},{} collectedStacksInChunk={} totalCollectedStacks={} remainingChunks={}",
                     this.playerId,
                     this.activeChunk.dimension().identifier(),
-                    chunkPos.x(),
-                    chunkPos.z(),
+                    chunkPos.x,
+                    chunkPos.z,
                     movedStacks,
                     this.collectedStacks,
                     this.pendingChunks.size()

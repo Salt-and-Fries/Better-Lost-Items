@@ -17,13 +17,13 @@ public final class LostItemsNetworking {
      * Registers all common payload types and server receivers.
      */
     public static void registerCommon() {
-        PayloadTypeRegistry.clientboundPlay().register(TraderTabStatePayload.TYPE, TraderTabStatePayload.STREAM_CODEC);
-        PayloadTypeRegistry.clientboundPlay().register(RecoveryScreenPayload.TYPE, RecoveryScreenPayload.STREAM_CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(RecoveryScrollPayload.TYPE, RecoveryScrollPayload.STREAM_CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(SwitchTraderTabPayload.TYPE, SwitchTraderTabPayload.STREAM_CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(OpenTraderMarketPayload.TYPE, OpenTraderMarketPayload.STREAM_CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(PurchaseRecoveryItemsPayload.TYPE, PurchaseRecoveryItemsPayload.STREAM_CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(CollectRecoveryItemPayload.TYPE, CollectRecoveryItemPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(TraderTabStatePayload.TYPE, TraderTabStatePayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(RecoveryScreenPayload.TYPE, RecoveryScreenPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(RecoveryScrollPayload.TYPE, RecoveryScrollPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(SwitchTraderTabPayload.TYPE, SwitchTraderTabPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(OpenTraderMarketPayload.TYPE, OpenTraderMarketPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(PurchaseRecoveryItemsPayload.TYPE, PurchaseRecoveryItemsPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(CollectRecoveryItemPayload.TYPE, CollectRecoveryItemPayload.STREAM_CODEC);
         ServerPlayNetworking.registerGlobalReceiver(RecoveryScrollPayload.TYPE, (payload, context) ->
                 // Scroll packets are accepted only for the exact menu instance currently open.
                 context.player().level().getServer().execute(() -> {
