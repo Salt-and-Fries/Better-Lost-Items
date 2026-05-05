@@ -131,7 +131,7 @@ public final class LostItemsTradeController {
         LostItemsStorage storage = LostItemsStorageManager.get(player.level().getServer());
         List<LostItemEntry> marketEntries = getLockedMarketEntries(trader, storage);
         if (marketEntries.isEmpty()) {
-            openRecoveryScreen(player, trader, 0);
+            openRegularMarketScreen(player, trader, getRecoveryTabCount(storage, player.getUUID()));
             return;
         }
 
@@ -286,6 +286,28 @@ public final class LostItemsTradeController {
                     menu.containerId,
                     false,
                     marketEntries.size(),
+                    recoveryCount
+            ));
+        }
+    }
+
+    /**
+     * Opens the trader's current vanilla merchant UI when there are no custom market offers.
+     */
+    private static void openRegularMarketScreen(ServerPlayer player, WanderingTrader trader, int recoveryCount) {
+        MerchantOffers offers = ((LostTraderSession) trader).betterLostItems$getRegularOffers();
+        if (!offers.isEmpty()) {
+            ((AbstractVillagerAccessor) trader).betterLostItems$setOffers(offers);
+        }
+
+        ((LostTraderSession) trader).betterLostItems$setActiveTab(LostOfferKind.MARKET);
+        trader.setTradingPlayer(player);
+        trader.openTradingScreen(player, trader.getDisplayName(), 1);
+        if (player.containerMenu instanceof MerchantMenu menu) {
+            ServerPlayNetworking.send(player, new TraderTabStatePayload(
+                    menu.containerId,
+                    false,
+                    0,
                     recoveryCount
             ));
         }

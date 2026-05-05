@@ -1,5 +1,5 @@
 {
   "modmenu.nameTranslation.better_lost_items": "Better Lost Items",
   "modmenu.summaryTranslation.better_lost_items": "Recover despawned and death-lost items through wandering traders.",
-  "modmenu.descriptionTranslation.better_lost_items": "Better Lost Items tracks despawned world drops, saves player death loot, and turns wandering traders into recovery merchants. Configure recovery costs, fetch supplies, burned loot, and void loot directly from Mod Menu."
+  "modmenu.descriptionTranslation.better_lost_items": "Better Lost Items tracks despawned world drops, saves player death loot, and turns wandering traders into recovery merchants. Configure recovery costs, fetch supplies, burned loot, and void loot from Mod Menu if it is installed."
 }

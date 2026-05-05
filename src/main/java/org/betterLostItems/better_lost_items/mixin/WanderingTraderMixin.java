@@ -8,8 +8,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.stats.Stats;
 import net.minecraft.server.level.ServerLevel;
+import org.betterLostItems.better_lost_items.mixin.AbstractVillagerAccessor;
 import org.betterLostItems.better_lost_items.LostItemsTradeController;
 import org.betterLostItems.better_lost_items.LostItemsTraderJourneyManager;
 import org.betterLostItems.better_lost_items.LostOfferKind;
@@ -42,6 +44,8 @@ public abstract class WanderingTraderMixin implements LostTraderSession {
     private boolean betterLostItems$marketSelectionLocked;
     @Unique
     private final List<UUID> betterLostItems$marketSelectionIds = new ArrayList<>();
+    @Unique
+    private MerchantOffers betterLostItems$regularOffers = new MerchantOffers();
 
     /**
      * @return active Better Lost Items tab represented by this trader's offer state
@@ -92,6 +96,16 @@ public abstract class WanderingTraderMixin implements LostTraderSession {
         this.betterLostItems$marketSelectionIds.addAll(ids);
     }
 
+    @Override
+    public MerchantOffers betterLostItems$getRegularOffers() {
+        return this.betterLostItems$copyOffers(this.betterLostItems$regularOffers);
+    }
+
+    @Override
+    public void betterLostItems$setRegularOffers(MerchantOffers offers) {
+        this.betterLostItems$regularOffers = this.betterLostItems$copyOffers(offers);
+    }
+
     /**
      * Opens either the market tab or recovery tab instead of vanilla wandering-trader behavior.
      */
@@ -130,9 +144,17 @@ public abstract class WanderingTraderMixin implements LostTraderSession {
      */
     @Inject(method = "updateTrades", at = @At("TAIL"))
     private void betterLostItems$lockMarketSelectionOnTradeGeneration(ServerLevel serverLevel, CallbackInfo ci) {
+        this.betterLostItems$setRegularOffers(((AbstractVillagerAccessor) this).betterLostItems$getOffers());
         if (!this.betterLostItems$marketSelectionLocked) {
             LostItemsTradeController.ensureMarketSelectionLocked((WanderingTrader) (Object) this, serverLevel.getServer());
         }
+    }
+
+    @Unique
+    private MerchantOffers betterLostItems$copyOffers(MerchantOffers offers) {
+        MerchantOffers copy = new MerchantOffers();
+        copy.addAll(offers);
+        return copy;
     }
 
     /**

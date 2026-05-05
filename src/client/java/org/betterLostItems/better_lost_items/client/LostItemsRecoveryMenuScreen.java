@@ -213,6 +213,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     protected void extractTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
         super.extractTooltip(graphics, mouseX, mouseY);
         this.setFetchBadgeTooltip(graphics, mouseX, mouseY);
+        this.setFetchButtonTooltip(graphics, mouseX, mouseY);
     }
 
     /**
@@ -281,8 +282,23 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
         if (this.fetchButton != null) {
             this.fetchButton.visible = LostItemsConfig.isFetchEnabled();
             this.fetchButton.active = LostItemsConfig.isFetchEnabled() && this.menu.canFetch();
-            this.fetchButton.setMessage(Component.literal(this.menu.isFetchActive() ? "Fetching" : "Fetch"));
+            this.fetchButton.setMessage(this.fetchButtonMessage());
         }
+    }
+
+    /**
+     * @return current Fetch button label, including disabled reasons that fit the button.
+     */
+    private Component fetchButtonMessage() {
+        if (this.menu.isFetchActive()) {
+            return Component.literal("Fetching");
+        }
+
+        if (!this.hasFetchableLoot()) {
+            return Component.literal("No Fetch");
+        }
+
+        return Component.literal("Fetch");
     }
 
     /**
@@ -546,6 +562,41 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     }
 
     /**
+     * Explains why the Fetch button is disabled when the supplies look correct.
+     */
+    private void setFetchButtonTooltip(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        if (this.fetchButton == null || !this.fetchButton.visible || !this.isHoveringFetchButton(mouseX, mouseY)) {
+            return;
+        }
+
+        Component tooltip = null;
+        if (this.menu.isFetchActive()) {
+            tooltip = Component.literal("This trader is already fetching your loot.");
+        } else if (!this.hasFetchableLoot()) {
+            tooltip = Component.literal("No unloaded, burned, or void-lost loot is waiting to be fetched.");
+        } else if (!this.hasJourneySupply()) {
+            tooltip = this.journeyTooltip();
+        } else if (this.menu.getBurnedCount() > 0 && !this.hasBurnedFetchSupply()) {
+            tooltip = this.burnedTooltip();
+        } else if (this.menu.getFallenCount() > 0 && !this.hasVoidFetchSupply()) {
+            tooltip = this.voidTooltip();
+        }
+
+        if (tooltip != null) {
+            graphics.setTooltipForNextFrame(this.font, tooltip, mouseX, mouseY);
+        }
+    }
+
+    /**
+     * @return whether there is any hidden or unloaded loot that Fetch can start retrieving.
+     */
+    private boolean hasFetchableLoot() {
+        return this.menu.getTrackedChunkCount() > 0
+                || this.menu.getBurnedCount() > 0
+                || this.menu.getFallenCount() > 0;
+    }
+
+    /**
      * @return tooltip text for the journey supply requirement
      */
     private Component journeyTooltip() {
@@ -649,6 +700,18 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
                 && mouseX < x + FETCH_STATUS_SIZE + FETCH_STATUS_HOVER_PADDING
                 && mouseY >= y - FETCH_STATUS_HOVER_PADDING
                 && mouseY < y + FETCH_STATUS_SIZE + FETCH_STATUS_HOVER_PADDING;
+    }
+
+    /**
+     * @return whether the mouse is over the Fetch button bounds.
+     */
+    private boolean isHoveringFetchButton(int mouseX, int mouseY) {
+        int x = this.leftPos + FETCH_BUTTON_X;
+        int y = this.topPos + FETCH_BUTTON_Y;
+        return mouseX >= x
+                && mouseX < x + FETCH_BUTTON_WIDTH
+                && mouseY >= y
+                && mouseY < y + FETCH_BUTTON_HEIGHT;
     }
 
     /**

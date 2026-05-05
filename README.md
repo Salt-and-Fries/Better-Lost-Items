@@ -136,7 +136,7 @@ The built jar is created with:
 Then use the jar from:
 
 ```text
-build/libs/better-lost-items-1.0.jar
+build/libs/better-lost-items-1.1.jar
 ```
 
 Do not use the `-sources.jar` file unless you are a developer.

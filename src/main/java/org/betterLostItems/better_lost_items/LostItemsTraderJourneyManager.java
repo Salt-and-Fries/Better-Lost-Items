@@ -41,6 +41,7 @@ public final class LostItemsTraderJourneyManager {
     private static final int DEPARTURE_TARGET_DISTANCE = 72;
     private static final double DEPARTURE_DESPAWN_DISTANCE_SQR = 48.0D * 48.0D;
     private static final int DEPARTURE_TIMEOUT_TICKS = 20 * 25;
+    private static final int FETCH_GRACE_PERIOD_TICKS = 20 * 120;
     private static final long DAY_LENGTH = 24000L;
 
     private static final Map<UUID, Integer> RESPAWN_TRADER_CHECKS = new ConcurrentHashMap<>();
@@ -73,7 +74,8 @@ public final class LostItemsTraderJourneyManager {
      * @return whether this trader is currently leaving after accepting fetch supplies
      */
     public static boolean isDeparting(WanderingTrader trader) {
-        return DEPARTURES.containsKey(trader.getId());
+        Departure departure = DEPARTURES.get(trader.getId());
+        return departure != null && departure.graceTicks() <= 0;
     }
 
     /**
@@ -118,7 +120,7 @@ public final class LostItemsTraderJourneyManager {
         storage.scheduleFetchReturn(player.getUUID(), returnGameTime);
 
         boolean startedChunkFetch = hasTrackedChunks && LostItemsFetchManager.startFetch(player, traderEntityId);
-        beginDeparture(player, trader);
+        scheduleDeparture(player, trader);
         Better_lost_items.LOGGER.info(
                 "[BLI DEBUG] Fetch journey started player={} trader={} returnGameTime={} hiddenStacks={} chunkFetchStarted={}",
                 player.getUUID(),
@@ -181,6 +183,16 @@ public final class LostItemsTraderJourneyManager {
             if (!(entity instanceof WanderingTrader trader) || !trader.isAlive()) {
                 iterator.remove();
                 continue;
+            }
+
+            if (departure.graceTicks() > 0) {
+                DEPARTURES.put(entry.getKey(), departure);
+                continue;
+            }
+
+            if (departure.ageTicks() == 0) {
+                trader.setTradingPlayer(null);
+                trader.setDespawnDelay(DEPARTURE_TIMEOUT_TICKS);
             }
 
             ServerPlayer player = server.getPlayerList().getPlayer(departure.playerId());
@@ -264,13 +276,13 @@ public final class LostItemsTraderJourneyManager {
     /**
      * Starts making a trader leave the player before fetched loot can return.
      */
-    private static void beginDeparture(ServerPlayer player, WanderingTrader trader) {
-        trader.setTradingPlayer(null);
-        trader.setDespawnDelay(DEPARTURE_TIMEOUT_TICKS);
+    private static void scheduleDeparture(ServerPlayer player, WanderingTrader trader) {
+        if (DEPARTURES.containsKey(trader.getId())) {
+            return;
+        }
+
         BlockPos target = departureTarget(player, trader);
-        trader.setWanderTarget(target);
-        trader.setHomeTo(target, 16);
-        DEPARTURES.put(trader.getId(), new Departure(player.getUUID(), player.level().dimension(), target, 0));
+        DEPARTURES.put(trader.getId(), new Departure(player.getUUID(), player.level().dimension(), target, 0, FETCH_GRACE_PERIOD_TICKS));
     }
 
     /**
@@ -373,12 +385,16 @@ public final class LostItemsTraderJourneyManager {
     /**
      * Immutable departure state stored between server ticks.
      */
-    private record Departure(UUID playerId, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, BlockPos target, int ageTicks) {
+    private record Departure(UUID playerId, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, BlockPos target, int ageTicks, int graceTicks) {
         /**
          * @return same departure with age advanced by one tick
          */
         private Departure tick() {
-            return new Departure(this.playerId, this.dimension, this.target, this.ageTicks + 1);
+            if (this.graceTicks > 0) {
+                return new Departure(this.playerId, this.dimension, this.target, 0, this.graceTicks - 1);
+            }
+
+            return new Departure(this.playerId, this.dimension, this.target, this.ageTicks + 1, 0);
         }
     }
 }

@@ -326,7 +326,6 @@ public class LostItemsRecoveryMenu extends AbstractContainerMenu {
             }
 
             this.refreshServerState();
-            this.serverPlayer.closeContainer();
             return true;
         }
 
