@@ -1,5 +1,6 @@
 package org.betterLostItems.better_lost_items.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -38,7 +39,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     private static final int COST_VALUE_Y = 56;
     private static final int INVENTORY_LABEL_Y_OFFSET = 12;
     private static final int SECTION_LABEL_Y = 6;
-    private static final int GHOST_ITEM_OVERLAY_COLOR = 0x99C6C6C6;
+    private static final float GHOST_ITEM_ALPHA = 0.38F;
     private static final int BACKGROUND_TEXTURE_WIDTH = 338;
     private static final int BACKGROUND_TEXTURE_HEIGHT = 228;
     private static final int FETCH_STATUS_SIZE = 4;
@@ -479,7 +480,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
     }
 
     /**
-     * Draws one ghost item and overlays a translucent wash so it reads as a placeholder.
+     * Draws one translucent ghost item so empty input slots read as placeholders.
      */
     private void drawGhostItem(GuiGraphics graphics, ItemStack stack, int slotX, int slotY, boolean slotIsEmpty) {
         if (!slotIsEmpty || stack.isEmpty() || slotX < 0) {
@@ -489,9 +490,12 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
         int x = this.leftPos + slotX;
         int y = this.topPos + slotY;
         ItemStack ghostStack = stack.copy();
+        RenderSystem.enableBlend();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, GHOST_ITEM_ALPHA);
         graphics.renderFakeItem(ghostStack, x, y);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         graphics.renderItemDecorations(this.font, ghostStack, x, y);
-        graphics.fill(x, y, x + 16, y + 16, GHOST_ITEM_OVERLAY_COLOR);
+        RenderSystem.disableBlend();
     }
 
     /**

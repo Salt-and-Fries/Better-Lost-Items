@@ -165,8 +165,19 @@ public final class BetterLostItemsConfigScreen extends Screen {
         graphics.fill(0, 0, this.width, this.height, 0xB0000000);
         graphics.fill(0, 0, this.width, LIST_TOP - 8, 0xA0000000);
         graphics.fill(0, this.listBottom(), this.width, this.height, 0xC0000000);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 16, TITLE_COLOR);
+        super.render(graphics, mouseX, mouseY, delta);
+        this.drawLabels(graphics);
+        this.drawScrollbar(graphics);
+        this.drawOptionTooltip(graphics, mouseX, mouseY);
+        int statusColor = this.hasValidationError ? ERROR_COLOR : SUCCESS_COLOR;
+        graphics.drawCenteredString(this.font, Component.literal(this.statusMessage), this.width / 2, this.height - 46, statusColor);
+    }
 
+    /**
+     * Draws title and option labels after widgets so vanilla widget rendering cannot soften them.
+     */
+    private void drawLabels(GuiGraphics graphics) {
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 16, TITLE_COLOR);
         for (Label label : this.labels) {
             int y = this.scrolledY(label.baseY());
             if (!this.isTextRowVisible(y)) {
@@ -176,12 +187,6 @@ public final class BetterLostItemsConfigScreen extends Screen {
             int color = label.section() ? SECTION_COLOR : (label.active().getAsBoolean() ? LABEL_COLOR : DISABLED_LABEL_COLOR);
             graphics.drawString(this.font, Component.literal(label.text()), this.listLeft, y, color, true);
         }
-
-        this.drawScrollbar(graphics);
-        super.render(graphics, mouseX, mouseY, delta);
-        this.drawOptionTooltip(graphics, mouseX, mouseY);
-        int statusColor = this.hasValidationError ? ERROR_COLOR : SUCCESS_COLOR;
-        graphics.drawCenteredString(this.font, Component.literal(this.statusMessage), this.width / 2, this.height - 46, statusColor);
     }
 
     /**
