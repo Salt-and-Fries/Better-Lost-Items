@@ -13,7 +13,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * @param rightScrollRow requested retrieved-loot grid row
  */
 public record RecoveryScrollPayload(int containerId, int leftScrollRow, int rightScrollRow) implements CustomPacketPayload {
-    public static final Type<RecoveryScrollPayload> TYPE = CustomPacketPayload.createType("recovery_scroll");
+    public static final Type<RecoveryScrollPayload> TYPE = new Type<>(Better_lost_items.id("recovery_scroll"));
     public static final StreamCodec<RegistryFriendlyByteBuf, RecoveryScrollPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             RecoveryScrollPayload::containerId,
@@ -25,7 +25,7 @@ public record RecoveryScrollPayload(int containerId, int leftScrollRow, int righ
     );
 
     /**
-     * @return Fabric custom payload type for this packet
+     * @return custom payload type for this packet
      */
     @Override
     public Type<RecoveryScrollPayload> type() {

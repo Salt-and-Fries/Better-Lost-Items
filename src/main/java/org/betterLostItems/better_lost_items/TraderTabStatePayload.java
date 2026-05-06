@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  * @param recoveryCount count shown on the recovery tab
  */
 public record TraderTabStatePayload(int containerId, boolean recoveryTab, int marketCount, int recoveryCount) implements CustomPacketPayload {
-    public static final Type<TraderTabStatePayload> TYPE = CustomPacketPayload.createType("trader_tab_state");
+    public static final Type<TraderTabStatePayload> TYPE = new Type<>(Better_lost_items.id("trader_tab_state"));
     public static final StreamCodec<RegistryFriendlyByteBuf, TraderTabStatePayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.CONTAINER_ID,
             TraderTabStatePayload::containerId,
@@ -28,7 +28,7 @@ public record TraderTabStatePayload(int containerId, boolean recoveryTab, int ma
     );
 
     /**
-     * @return Fabric custom payload type for this packet
+     * @return custom payload type for this packet
      */
     @Override
     public Type<TraderTabStatePayload> type() {

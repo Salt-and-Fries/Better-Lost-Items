@@ -122,10 +122,9 @@ These are especially useful for testing the recovery UI.
 
 ## Installation
 
-1. Install Fabric Loader for the supported Minecraft version.
-2. Install Fabric API.
-3. Put the Better Lost Items jar into your `mods` folder.
-4. Optional but recommended: install Mod Menu to edit the config in-game.
+1. Install NeoForge for the supported Minecraft version.
+2. Put the Better Lost Items jar into your `mods` folder.
+3. Edit the config from NeoForge's Mods screen or through `config/better_lost_items.json`.
 
 The built jar is created with:
 
@@ -136,7 +135,7 @@ The built jar is created with:
 Then use the jar from:
 
 ```text
-build/libs/better-lost-items-1.1.jar
+build/libs/better-lost-items-1.2.jar
 ```
 
 Do not use the `-sources.jar` file unless you are a developer.

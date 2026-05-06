@@ -1,7 +1,6 @@
 package org.betterLostItems.better_lost_items.client;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -12,6 +11,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.betterLostItems.better_lost_items.Better_lost_items;
 import org.betterLostItems.better_lost_items.LostItemsConfig;
 import org.betterLostItems.better_lost_items.LostItemsRecoveryMenu;
@@ -87,7 +87,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
                 false,
                 button -> {
                     if (this.menu.getTraderEntityId() != 0) {
-                        ClientPlayNetworking.send(new OpenTraderMarketPayload(this.menu.getTraderEntityId()));
+                        ClientPacketDistributor.sendToServer(new OpenTraderMarketPayload(this.menu.getTraderEntityId()));
                     }
                 }
         ));
@@ -310,7 +310,7 @@ public final class LostItemsRecoveryMenuScreen extends AbstractContainerScreen<L
             return false;
         }
 
-        ClientPlayNetworking.send(new RecoveryScrollPayload(this.menu.containerId, leftScrollRow, rightScrollRow));
+        ClientPacketDistributor.sendToServer(new RecoveryScrollPayload(this.menu.containerId, leftScrollRow, rightScrollRow));
         return true;
     }
 

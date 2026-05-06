@@ -1,6 +1,7 @@
 package org.betterLostItems.better_lost_items.client;
 
 import net.minecraft.client.Minecraft;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.lwjgl.glfw.GLFW;
 import org.betterLostItems.better_lost_items.TraderTabStatePayload;
 import org.betterLostItems.better_lost_items.RecoveryScreenPayload;
@@ -27,6 +28,14 @@ public final class LostItemsClientState {
         if (Minecraft.getInstance().screen instanceof LostItemsMerchantScreenBridge bridge) {
             bridge.betterLostItems$applyTabState(state);
         }
+    }
+
+    public static void handleTraderTabState(TraderTabStatePayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> apply(payload));
+    }
+
+    public static void handleRecoveryScreen(RecoveryScreenPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> openOrRefreshRecovery(payload));
     }
 
     /**
