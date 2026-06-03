@@ -102,7 +102,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
         rowY += ROW_HEIGHT + 8;
 
         rowY = this.addSectionLabel("Wandering Trader Market", rowY);
-        this.idleDroppedLootTableButton = this.addWideButtonRow(rowY, this.idleDroppedLootTableText(), () -> true, "Allows idle despawned items without a player tag to become wandering trader market offers.", button -> {
+        this.idleDroppedLootTableButton = this.addToggle(rowY, "Idle loot table", this.draft.idleDroppedItemsLootTableEnabled, () -> true, "Allows idle despawned items without a player tag to become wandering trader market offers.", button -> {
             this.draft.idleDroppedItemsLootTableEnabled = !this.draft.idleDroppedItemsLootTableEnabled;
             this.updateWidgetStates();
             this.refreshValidation();
@@ -317,23 +317,10 @@ public final class BetterLostItemsConfigScreen extends Screen {
     }
 
     /**
-     * Adds a full-width button row for long option names that do not fit the split label layout.
-     */
-    private Button addWideButtonRow(int rowY, Component message, BooleanSupplier activeSupplier, String tooltip, Button.OnPress onPress) {
-        int width = Math.min(LIST_WIDTH, this.width - 40);
-        this.labels.add(new Label("", rowY + 5, false, activeSupplier, tooltip));
-        Button button = this.addRenderableWidget(Button.builder(message, onPress)
-                .bounds(this.listLeft, this.scrolledY(rowY), width, FIELD_HEIGHT)
-                .build());
-        this.widgetRows.add(new WidgetRow(button, rowY, activeSupplier));
-        return button;
-    }
-
-    /**
      * Applies active/inactive states after toggles or scrolling change.
      */
     private void updateWidgetStates() {
-        this.idleDroppedLootTableButton.setMessage(this.idleDroppedLootTableText());
+        this.idleDroppedLootTableButton.setMessage(this.enabledText(this.draft.idleDroppedItemsLootTableEnabled));
         this.fetchEnabledButton.setMessage(this.enabledText(this.draft.fetchEnabled));
         this.journeyModeButton.setMessage(this.journeyModeText());
         this.burnedEnabledButton.setMessage(this.enabledText(this.draft.burnedItemsRetrievable));
@@ -684,13 +671,6 @@ public final class BetterLostItemsConfigScreen extends Screen {
      */
     private Component enabledText(boolean enabled) {
         return Component.literal(enabled ? "Enabled" : "Disabled");
-    }
-
-    /**
-     * @return text for the idle dropped items loot-table toggle button
-     */
-    private Component idleDroppedLootTableText() {
-        return Component.literal("Enable villager idle dropped items loot table: " + (this.draft.idleDroppedItemsLootTableEnabled ? "Enabled" : "Disabled"));
     }
 
     /**
