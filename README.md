@@ -92,6 +92,7 @@ Configurable options include:
 
 - The item used to pay for death-loot recovery.
 - The amount required for death-loot recovery.
+- Whether idle despawned items without a player tag can become wandering trader market offers.
 - Whether the fetch system is enabled.
 - Whether fetch uses food or a custom item for journey supplies.
 - The custom journey item, potion type, and amount.
