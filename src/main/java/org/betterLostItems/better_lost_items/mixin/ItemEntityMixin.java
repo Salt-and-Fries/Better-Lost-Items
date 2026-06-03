@@ -11,6 +11,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import org.betterLostItems.better_lost_items.Better_lost_items;
 import org.betterLostItems.better_lost_items.DeathDropTrackingContext;
+import org.betterLostItems.better_lost_items.LostItemsConfig;
 import org.betterLostItems.better_lost_items.LostItemsStorage;
 import org.betterLostItems.better_lost_items.LostItemsStorageManager;
 import org.betterLostItems.better_lost_items.LostItemsDebug;
@@ -91,12 +92,16 @@ public abstract class ItemEntityMixin implements TrackedItemEntity {
             return;
         }
 
-        LostItemsStorage storage = LostItemsStorageManager.get(serverLevel.getServer());
         if (this.betterLostItems$ownerId == null) {
+            if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
+                return;
+            }
+
             Better_lost_items.LOGGER.info("[BLI DEBUG] Despawn storing UNCLAIMED entityId={} age={} stack={}", itemEntity.getId(), itemEntity.getAge(), LostItemsDebug.stack(stack));
-            storage.addUnclaimed(stack);
+            LostItemsStorageManager.get(serverLevel.getServer()).addUnclaimed(stack);
         } else {
             Better_lost_items.LOGGER.info("[BLI DEBUG] Despawn storing PLAYER entityId={} age={} owner={} stack={}", itemEntity.getId(), itemEntity.getAge(), this.betterLostItems$ownerId, LostItemsDebug.stack(stack));
+            LostItemsStorage storage = LostItemsStorageManager.get(serverLevel.getServer());
             storage.addPlayerLostItem(this.betterLostItems$ownerId, stack);
             this.betterLostItems$untrackChunkIfEmpty(serverLevel, itemEntity.chunkPosition(), itemEntity.getId());
         }

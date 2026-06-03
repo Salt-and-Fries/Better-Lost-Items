@@ -57,6 +57,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
     private EditBox voidPotionField;
     private EditBox voidAmountField;
 
+    private Button idleDroppedLootTableButton;
     private Button fetchEnabledButton;
     private Button journeyModeButton;
     private Button burnedEnabledButton;
@@ -97,6 +98,14 @@ public final class BetterLostItemsConfigScreen extends Screen {
         this.paymentItemField = this.addTextField(rowY, "Payment item", this.draft.deathLootPaymentItem, () -> true, "Item ID used to buy all lost death loot.");
         rowY += ROW_HEIGHT;
         this.paymentAmountField = this.addTextField(rowY, "Payment amount", Integer.toString(this.draft.deathLootPaymentAmount), () -> true, "How many payment items are needed to move all lost loot into retrieved loot.");
+        rowY += ROW_HEIGHT + 8;
+
+        rowY = this.addSectionLabel("Wandering Trader Market", rowY);
+        this.idleDroppedLootTableButton = this.addWideButtonRow(rowY, this.idleDroppedLootTableText(), () -> true, "Allows idle despawned items without a player tag to become wandering trader market offers.", button -> {
+            this.draft.idleDroppedItemsLootTableEnabled = !this.draft.idleDroppedItemsLootTableEnabled;
+            this.updateWidgetStates();
+            this.refreshValidation();
+        });
         rowY += ROW_HEIGHT + 8;
 
         rowY = this.addSectionLabel("Fetch Journey", rowY);
@@ -307,9 +316,23 @@ public final class BetterLostItemsConfigScreen extends Screen {
     }
 
     /**
+     * Adds a full-width button row for long option names that do not fit the split label layout.
+     */
+    private Button addWideButtonRow(int rowY, Component message, BooleanSupplier activeSupplier, String tooltip, Button.OnPress onPress) {
+        int width = Math.min(LIST_WIDTH, this.width - 40);
+        this.labels.add(new Label("", rowY + 5, false, activeSupplier, tooltip));
+        Button button = this.addRenderableWidget(Button.builder(message, onPress)
+                .bounds(this.listLeft, this.scrolledY(rowY), width, FIELD_HEIGHT)
+                .build());
+        this.widgetRows.add(new WidgetRow(button, rowY, activeSupplier));
+        return button;
+    }
+
+    /**
      * Applies active/inactive states after toggles or scrolling change.
      */
     private void updateWidgetStates() {
+        this.idleDroppedLootTableButton.setMessage(this.idleDroppedLootTableText());
         this.fetchEnabledButton.setMessage(this.enabledText(this.draft.fetchEnabled));
         this.journeyModeButton.setMessage(this.journeyModeText());
         this.burnedEnabledButton.setMessage(this.enabledText(this.draft.burnedItemsRetrievable));
@@ -348,6 +371,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
     private void copyConfigValues(LostItemsConfig.ConfigData source, LostItemsConfig.ConfigData target) {
         target.deathLootPaymentItem = source.deathLootPaymentItem;
         target.deathLootPaymentAmount = source.deathLootPaymentAmount;
+        target.idleDroppedItemsLootTableEnabled = source.idleDroppedItemsLootTableEnabled;
         target.fetchEnabled = source.fetchEnabled;
         target.useFoodForJourney = source.useFoodForJourney;
         target.journeyFoodAmount = source.journeyFoodAmount;
@@ -441,6 +465,7 @@ public final class BetterLostItemsConfigScreen extends Screen {
         LostItemsConfig.ConfigData config = this.draft.copy();
         config.deathLootPaymentItem = this.normalizedText(this.paymentItemField);
         config.deathLootPaymentAmount = this.parseAmount(this.paymentAmountField);
+        config.idleDroppedItemsLootTableEnabled = this.draft.idleDroppedItemsLootTableEnabled;
         config.fetchEnabled = this.draft.fetchEnabled;
         config.useFoodForJourney = this.draft.useFoodForJourney;
         config.journeyFoodAmount = this.parseAmount(this.journeyFoodAmountField);
@@ -658,6 +683,13 @@ public final class BetterLostItemsConfigScreen extends Screen {
      */
     private Component enabledText(boolean enabled) {
         return Component.literal(enabled ? "Enabled" : "Disabled");
+    }
+
+    /**
+     * @return text for the idle dropped items loot-table toggle button
+     */
+    private Component idleDroppedLootTableText() {
+        return Component.literal("Enable villager idle dropped items loot table: " + (this.draft.idleDroppedItemsLootTableEnabled ? "Enabled" : "Disabled"));
     }
 
     /**
