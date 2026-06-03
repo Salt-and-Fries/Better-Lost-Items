@@ -124,6 +124,13 @@ public final class LostItemsConfig {
     }
 
     /**
+     * @return whether unowned despawned items should populate wandering trader market offers
+     */
+    public static boolean isIdleDroppedItemsLootTableEnabled() {
+        return config.idleDroppedItemsLootTableEnabled;
+    }
+
+    /**
      * @return whether the stack can be inserted into the death-loot payment slot
      */
     public static boolean isDeathLootPaymentItem(ItemStack stack) {
@@ -459,6 +466,9 @@ public final class LostItemsConfig {
         @SerializedName("death_loot_payment_amount")
         public int deathLootPaymentAmount = 10;
 
+        @SerializedName("idle_dropped_items_loot_table_enabled")
+        public boolean idleDroppedItemsLootTableEnabled = true;
+
         @SerializedName("fetch_enabled")
         public boolean fetchEnabled = true;
 
@@ -510,6 +520,7 @@ public final class LostItemsConfig {
             ConfigData copy = new ConfigData();
             copy.deathLootPaymentItem = this.deathLootPaymentItem;
             copy.deathLootPaymentAmount = this.deathLootPaymentAmount;
+            copy.idleDroppedItemsLootTableEnabled = this.idleDroppedItemsLootTableEnabled;
             copy.fetchEnabled = this.fetchEnabled;
             copy.useFoodForJourney = this.useFoodForJourney;
             copy.journeyFoodAmount = this.journeyFoodAmount;
