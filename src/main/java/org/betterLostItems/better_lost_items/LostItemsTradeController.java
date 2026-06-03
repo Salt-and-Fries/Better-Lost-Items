@@ -135,20 +135,21 @@ public final class LostItemsTradeController {
         }
 
         LostItemsStorage storage = LostItemsStorageManager.get(player.level().getServer());
+        int recoveryCount = getRecoveryTabCount(storage, player.getUUID());
+        MARKET_TRANSITIONS.add(player.getUUID());
+        player.level().getServer().execute(() -> MARKET_TRANSITIONS.remove(player.getUUID()));
         if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
-            openRegularMarketScreen(player, trader, getRecoveryTabCount(storage, player.getUUID()));
+            openRegularMarketScreen(player, trader, recoveryCount);
             return;
         }
 
         List<LostItemEntry> marketEntries = getLockedMarketEntries(trader, storage);
         if (marketEntries.isEmpty()) {
-            openRegularMarketScreen(player, trader, getRecoveryTabCount(storage, player.getUUID()));
+            openRegularMarketScreen(player, trader, recoveryCount);
             return;
         }
 
-        MARKET_TRANSITIONS.add(player.getUUID());
-        openMarketScreen(player, trader, marketEntries, getRecoveryTabCount(storage, player.getUUID()));
-        player.level().getServer().execute(() -> MARKET_TRANSITIONS.remove(player.getUUID()));
+        openMarketScreen(player, trader, marketEntries, recoveryCount);
     }
 
     /**
