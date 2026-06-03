@@ -64,10 +64,16 @@ public final class LostItemsTradeController {
      */
     public static boolean openPreferredScreen(WanderingTrader trader, ServerPlayer player) {
         LostItemsStorage storage = LostItemsStorageManager.get(player.level().getServer());
-        List<LostItemEntry> marketEntries = getLockedMarketEntries(trader, storage);
+        boolean marketEnabled = LostItemsConfig.isIdleDroppedItemsLootTableEnabled();
+        List<LostItemEntry> marketEntries = marketEnabled ? getLockedMarketEntries(trader, storage) : List.of();
         int recoveryCount = getRecoveryTabCount(storage, player.getUUID());
         Better_lost_items.LOGGER.info("[BLI DEBUG] openPreferredScreen trader={} player={} marketCount={} recoveryCount={} lockedSelection={}",
                 trader.getUUID(), LostItemsDebug.player(player), marketEntries.size(), recoveryCount, ((LostTraderSession) trader).betterLostItems$hasLockedMarketSelection());
+        if (!marketEnabled) {
+            openRegularMarketScreen(player, trader, recoveryCount);
+            return true;
+        }
+
         if (!marketEntries.isEmpty()) {
             openMarketScreen(player, trader, marketEntries, recoveryCount);
             return true;
@@ -129,6 +135,11 @@ public final class LostItemsTradeController {
         }
 
         LostItemsStorage storage = LostItemsStorageManager.get(player.level().getServer());
+        if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
+            openRegularMarketScreen(player, trader, getRecoveryTabCount(storage, player.getUUID()));
+            return;
+        }
+
         List<LostItemEntry> marketEntries = getLockedMarketEntries(trader, storage);
         if (marketEntries.isEmpty()) {
             openRegularMarketScreen(player, trader, getRecoveryTabCount(storage, player.getUUID()));
@@ -258,6 +269,11 @@ public final class LostItemsTradeController {
 
         LostItemsStorage storage = LostItemsStorageManager.get(player.level().getServer());
         List<LostItemEntry> marketEntries = getLockedMarketEntries(trader, storage);
+        if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
+            openRegularMarketScreen(player, trader, getRecoveryTabCount(storage, player.getUUID()));
+            return;
+        }
+
         MerchantOffers offers = buildMarketOffers(marketEntries);
         applyOffers(trader, offers, LostOfferKind.MARKET);
         resetMenu(menu, offers);
@@ -376,6 +392,10 @@ public final class LostItemsTradeController {
      * Returns the persisted market selection for a trader, repairing stale IDs when needed.
      */
     private static List<LostItemEntry> getLockedMarketEntries(WanderingTrader trader, LostItemsStorage storage) {
+        if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
+            return List.of();
+        }
+
         LostTraderSession session = (LostTraderSession) trader;
         lockMarketSelectionIfNeeded(trader, storage);
 
@@ -395,6 +415,10 @@ public final class LostItemsTradeController {
      * Ensures a trader spawned by vanilla has selected its Better Lost Items market entries.
      */
     public static void ensureMarketSelectionLocked(WanderingTrader trader, MinecraftServer server) {
+        if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
+            return;
+        }
+
         lockMarketSelectionIfNeeded(trader, LostItemsStorageManager.get(server));
     }
 
@@ -440,6 +464,10 @@ public final class LostItemsTradeController {
      * is called more than once before entity save data is written.</p>
      */
     private static void lockMarketSelectionIfNeeded(WanderingTrader trader, LostItemsStorage storage) {
+        if (!LostItemsConfig.isIdleDroppedItemsLootTableEnabled()) {
+            return;
+        }
+
         LostTraderSession session = (LostTraderSession) trader;
         if (session.betterLostItems$hasLockedMarketSelection()) {
             return;
